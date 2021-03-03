@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public class Gun : MonoBehaviour
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
+        playerStats.LevelRaised += OnLevelRaised;
 
         switch (gameObject.name)
         {
@@ -70,14 +72,15 @@ public class Gun : MonoBehaviour
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
     }
+
+    private void OnLevelRaised(PlayerStats.StatType type, int level)
+    {
+        statsUpgradeManager();
+    }
+
     private void Update()
     {
         Shoot();
-        if (playerStats.ApplyUpdates == true)
-        {
-            statsUpgradeManager();
-            playerStats.ApplyUpdates = false;
-        }
     }
     private void statsUpgradeManager()
     {

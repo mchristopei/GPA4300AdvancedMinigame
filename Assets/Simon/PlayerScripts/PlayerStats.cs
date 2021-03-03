@@ -1,12 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] public bool ApplyUpdates;
+    public enum StatType
+    {
+        None,
+        Level,
+        Health,
+        Defense,
+        Jump,
+        GunDamage,
+        GunRange,
+        AmmoCapacity,
+        MagazineCapacity
+    }
 
-    [SerializeField] public int Level;
+    [SerializeField] int level;
     [SerializeField] public float defense;
     [SerializeField] public float health;
     [SerializeField] public float JumpStrength;
@@ -14,38 +26,51 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] public float GunRangeUpgradeAmount;
     [SerializeField] public float ammoCapacityUpgradeAmount;
     [SerializeField] public float MagazineCapacityUpgradeAmount;
-                     
-    [SerializeField] public int healthUpgradeLevel;
-    [SerializeField] public int defenseUpgradeLevel;
-    [SerializeField] public int jumpLevel;
-    [SerializeField] public int GunDamageLevel;
-    [SerializeField] public int GunRangeLevel;
-    [SerializeField] public int ammoCapacityLevel;
-    [SerializeField] public int magazineCapacityLevel;
+
+    Dictionary<StatType, int> playerLevels;
+
+    public event Action<StatType, int> LevelRaised;
+
     private void Awake()
     {
-        //PlayerSpecififcStats
-        health = 100.0f + Level + healthUpgradeLevel * 10;
-        defense = 5f + Level + defenseUpgradeLevel * 10;
-        JumpStrength = 2f + jumpLevel * 0.25f;
-        //WeaponStats
-        GunDamageUpgradeAmount = 1.0f + GunDamageLevel * 0.2f + Level;
-        GunRangeUpgradeAmount = 1.0f + GunRangeLevel * 0.2f + Level;
-        ammoCapacityUpgradeAmount = 1.0f + ammoCapacityLevel * 0.25f + Level;
-        MagazineCapacityUpgradeAmount = 1f + magazineCapacityLevel * 2.5f + Level;
+        playerLevels = new Dictionary<StatType, int>();
     }
-    private void Update()
+
+    private void ResetStats()
     {
-        if(ApplyUpdates)
+        health = 100.0f + level + GetLevelFor(StatType.Health) * 10;
+        defense = 5f + level + GetLevelFor(StatType.Defense) * 10;
+        JumpStrength = 2f + GetLevelFor(StatType.Jump) * 0.25f;
+        GunDamageUpgradeAmount = GetLevelFor(StatType.GunDamage);
+    }
+
+    private int GetLevelFor(StatType type)
+    {
+        if (playerLevels.ContainsKey(type))
         {
-            health = 100.0f + Level + healthUpgradeLevel * 10;
-            defense = 5f + Level + defenseUpgradeLevel * 10;
-            JumpStrength = 2f + jumpLevel * 0.25f;
-            GunDamageUpgradeAmount = GunDamageLevel * 5 + Level;
-            GunRangeUpgradeAmount = 1.0f + GunRangeLevel * 0.2f + Level;
-            ammoCapacityUpgradeAmount = 1.0f + ammoCapacityLevel * 0.25f + Level;
-            MagazineCapacityUpgradeAmount = 1f + magazineCapacityLevel * 2.5f + Level;
+            return playerLevels[type];
         }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public void RaiseLevel(StatType type)
+    {
+        if (playerLevels.ContainsKey(type))
+        {
+            playerLevels[type] += 1;
+        }
+        else
+        {
+            playerLevels.Add(type, 1);
+        }
+
+        ResetStats();
+
+        if (LevelRaised != null)
+            LevelRaised.Invoke(type, playerLevels[type]);
     }
 
 }

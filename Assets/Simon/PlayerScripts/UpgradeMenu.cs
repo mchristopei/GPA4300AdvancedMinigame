@@ -19,57 +19,28 @@ public class UpgradeMenu : MonoBehaviour
     {
 
         playerStats = FindObjectOfType<PlayerStats>();
-
-        playerStats.Level = 0;
-        playerStats.defenseUpgradeLevel = 1;
-        playerStats.healthUpgradeLevel = 1;
-        playerStats.GunDamageLevel = 1;
-        playerStats.GunRangeLevel = 0;
-        playerStats.ammoCapacityLevel = 0;
-        playerStats.magazineCapacityLevel = 0;
-        playerStats.ApplyUpdates = true;
     }
 
     void Update()
     {
         if(upgradeLevel == true)
         {
-            playerStats.Level += 1;
-            LimitMaxLevel(playerStats.Level);
+            playerStats.RaiseLevel(PlayerStats.StatType.Level);
         }
         if (upgradeDefense == true)
         {
-            playerStats.defenseUpgradeLevel += 1;
-            LimitMaxLevel(playerStats.defenseUpgradeLevel);
+            playerStats.RaiseLevel(PlayerStats.StatType.Defense);
         }
         if (upgradeHealth == true)
         {
-            playerStats.healthUpgradeLevel += 1;
-            LimitMaxLevel(playerStats.healthUpgradeLevel);
+            playerStats.RaiseLevel(PlayerStats.StatType.Health);
         }
         if (upgradeDamage == true)
         {
-            playerStats.GunDamageLevel += 1;
-            LimitMaxLevel(playerStats.GunDamageLevel);
-        }
-        if (upgradeRange == true)
-        {
-            playerStats.GunRangeLevel += 1;
-            LimitMaxLevel(playerStats.GunRangeLevel);
-        }
-        if (upgradeAmmoCapacity == true)
-        {
-            playerStats.ammoCapacityLevel += 1;
-            LimitMaxLevel(playerStats.ammoCapacityLevel);
-        }
-        if (upgradeMagazineCapacity == true)
-        {
-            playerStats.magazineCapacityLevel += 1;
-            LimitMaxLevel(playerStats.magazineCapacityLevel);
+            playerStats.RaiseLevel(PlayerStats.StatType.GunDamage);
         }
         if(upgradeLevel || upgradeHealth || upgradeDefense|| upgradeAmmoCapacity || upgradeMagazineCapacity || upgradeDamage || upgradeRange)
         {
-            playerStats.ApplyUpdates = true;
             upgradeLevel = false;
             upgradeHealth = false;
             upgradeDefense = false;

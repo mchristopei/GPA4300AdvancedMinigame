@@ -72,11 +72,13 @@ public class WeaponNumber : MonoBehaviour
     private void Update()
     {
         Shoot();
+        /*
         if(playerStats.ApplyUpdates == true)
         {
             statsUpgradeManager();
             playerStats.ApplyUpdates = false;
         }
+        */
     }
     private void statsUpgradeManager()
     {
