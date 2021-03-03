@@ -49,10 +49,8 @@ public class JumpCR : MonoBehaviour
             jumpForce = x / y;
             rb.AddForce((jumpForce) * Vector3.up);
         }
-        else
-        {
+
             rb.AddForce(-9.81f * Vector3.up);
-        }
     }
 
     private void OnTriggerEnter(Collider other)
