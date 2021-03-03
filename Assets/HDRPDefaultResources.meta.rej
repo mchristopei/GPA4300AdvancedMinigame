@@ -1,0 +1,10 @@
+diff a/Assets/HDRPDefaultResources.meta b/Assets/HDRPDefaultResources.meta	(rejected hunks)
+@@ -1,8 +0,0 @@
+-fileFormatVersion: 2
+-guid: abc661c586a9116428571bb17ea1a331
+-folderAsset: yes
+-DefaultImporter:
+-  externalObjects: {}
+-  userData: 
+-  assetBundleName: 
+-  assetBundleVariant: 
