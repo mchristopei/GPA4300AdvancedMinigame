@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Rifle : MonoBehaviour
+public class Pistol : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
     [SerializeField] private Camera aimCam;
@@ -31,11 +32,11 @@ public class Rifle : MonoBehaviour
         playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
 
-        damage = 10f;
-        range = 100f;
-        maxAmmoAmount = 200;
-        magazineCapacity = 50;
-        timeBetweenShots = 0.25f;
+        damage = 20f;
+        range = 50f;
+        maxAmmoAmount = 50;
+        magazineCapacity = 10;
+        timeBetweenShots = 1f;
 
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
 
@@ -53,28 +54,6 @@ public class Rifle : MonoBehaviour
     private void Update()
     {
         Shoot();
-        Aim();
-    }
-    private void Aim()
-    {
-        if (KeyBoardManager.AimPressed())
-        {
-            isAiming = true;
-            aimTimer += Time.deltaTime;
-
-            if (aimTimer >= 0.25f)
-            {
-                camera.gameObject.SetActive(false);
-                aimCam.gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            camera.gameObject.SetActive(true);
-            aimCam.gameObject.SetActive(false);
-            isAiming = false;
-            aimTimer = 0.0f;
-        }
     }
     private void statsUpgradeManager()
     {
@@ -88,7 +67,11 @@ public class Rifle : MonoBehaviour
     }
     private void Shoot()
     {
-        if (KeyBoardManager.ShootPressed())
+        if (shotTimer >= timeBetweenShots)
+        {
+            isShooting = false;
+        }
+        if (KeyBoardManager.PistolShootPressed())
         {
             isShooting = true;
         }
@@ -102,10 +85,6 @@ public class Rifle : MonoBehaviour
 
             shotTimer += Time.deltaTime;
 
-            if (shotTimer >= timeBetweenShots)
-            {
-                isShooting = false;
-            }
         }
         if (!isShooting)
         {

@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Rifle : MonoBehaviour
+public class Sniper : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
     [SerializeField] private Camera aimCam;
@@ -31,11 +32,11 @@ public class Rifle : MonoBehaviour
         playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
 
-        damage = 10f;
-        range = 100f;
-        maxAmmoAmount = 200;
-        magazineCapacity = 50;
-        timeBetweenShots = 0.25f;
+        damage = 30f;
+        range = 250f;
+        maxAmmoAmount = 60;
+        magazineCapacity = 8;
+        timeBetweenShots = 2f;
 
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
 
@@ -88,7 +89,11 @@ public class Rifle : MonoBehaviour
     }
     private void Shoot()
     {
-        if (KeyBoardManager.ShootPressed())
+        if (shotTimer >= timeBetweenShots)
+        {
+            isShooting = false;
+        }
+        if (KeyBoardManager.PistolShootPressed())
         {
             isShooting = true;
         }
@@ -102,10 +107,6 @@ public class Rifle : MonoBehaviour
 
             shotTimer += Time.deltaTime;
 
-            if (shotTimer >= timeBetweenShots)
-            {
-                isShooting = false;
-            }
         }
         if (!isShooting)
         {

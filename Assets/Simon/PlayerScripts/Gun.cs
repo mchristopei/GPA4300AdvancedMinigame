@@ -7,6 +7,7 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
+    [SerializeField] private Camera aimCam;
 
     [SerializeField] private float ammoLeftInMagazine = 0;
     [SerializeField] private float totalAmmoCount;
@@ -23,12 +24,15 @@ public class Gun : MonoBehaviour
 
     private bool isShooting = false;
     private float timer = 0.0f;
+    private float shotTimer = 0.0f;
 
     private PlayerStats playerStats;
+    private bool isAiming;
+    private float aimTimer;
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
-        playerStats.LevelRaised += OnLevelRaised;
+        playerStats.LevelModified += OnLevelRaised;
 
         switch (gameObject.name)
         {
@@ -72,7 +76,6 @@ public class Gun : MonoBehaviour
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
     }
-
     private void OnLevelRaised(PlayerStats.StatType type, int level)
     {
         statsUpgradeManager();
@@ -80,38 +83,100 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        Shoot();
+        if(gameObject.name == "Rifle")
+        {
+            RifleShoot();
+        }
+        if (gameObject.name == "Pistol")
+        {
+            PistolShoot();
+        }
+        Aim();
+    }
+    private void Aim()
+    {
+        if (KeyBoardManager.AimPressed())
+        {
+            isAiming = true;
+            aimTimer += Time.deltaTime;
+
+            if(aimTimer >= 0.25f)
+            {
+                camera.gameObject.SetActive(false);
+                aimCam.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            camera.gameObject.SetActive(true);
+            aimCam.gameObject.SetActive(false);
+            isAiming = false;
+            aimTimer = 0.0f;
+        }
     }
     private void statsUpgradeManager()
     {
         damage = initDamageAmaount * (playerStats.GunDamageUpgradeAmount);
         range = initRangeAmount * playerStats.GunRangeUpgradeAmount;
-        maxAmmoAmount += initMaxAmmoCount * playerStats.ammoCapacityUpgradeAmount;
-        magazineCapacity += initMagazineCapacity * playerStats.MagazineCapacityUpgradeAmount;
+        maxAmmoAmount = initMaxAmmoCount * playerStats.ammoCapacityUpgradeAmount;
+        magazineCapacity = initMagazineCapacity * playerStats.MagazineCapacityUpgradeAmount;
 
         totalAmmoCount = maxAmmoAmount;
         ammoLeftInMagazine = magazineCapacity;
     }
-    private void Shoot()
+    private void PistolShoot()
     {
-        if (KeyBoardManager.ShootPressed() && !isShooting)
+        if(shotTimer >= timeBetweenShots)
+        {
+            isShooting = false;
+        }
+        if (KeyBoardManager.PistolShootPressed())
         {
             isShooting = true;
         }
-
-        if (isShooting && ammoLeftInMagazine >= 1)
+        if(isShooting)
         {
-            timer += Time.deltaTime;
+            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+            {
+                ShootRayCast();
+                ammoLeftInMagazine -= 1;
+            }
+
+            shotTimer += Time.deltaTime;
+
         }
-
-        if (timer > timeBetweenShots)
+        if(!isShooting)
         {
-            ammoLeftInMagazine -= 1;
-            timer = 0.0f;
-            isShooting = false;
+            shotTimer = 0.0f;
         }
         SetTotalAmmoCountAndReloadAmount();
-        ShootRayCast();
+    }
+    private void RifleShoot()
+    {
+        if (KeyBoardManager.ShootPressed())
+        {
+            isShooting = true;
+        }
+        if (isShooting)
+        {
+            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+            {
+                ShootRayCast();
+                ammoLeftInMagazine -= 1;
+            }
+
+            shotTimer += Time.deltaTime;
+
+            if (shotTimer >= timeBetweenShots)
+            {
+                isShooting = false;
+            }
+        }
+        if (!isShooting)
+        {
+            shotTimer = 0.0f;
+        }
+        SetTotalAmmoCountAndReloadAmount();
     }
     void ShootRayCast()
     {
@@ -119,7 +184,7 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(camera.transform.position + camera.transform.forward.normalized, camera.transform.forward, out hit, range))
         {
             Target target = hit.transform.GetComponent<Target>();
-           // Debug.Log(hit.transform.name);
+            Debug.Log(hit.transform.name);
 
             if (target != null)
             {

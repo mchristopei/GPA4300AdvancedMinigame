@@ -92,10 +92,10 @@ public class WeaponNumber : MonoBehaviour
     }
     private void Shoot()
     {
-        if (KeyBoardManager.ShootPressed() && !isShooting)
-        {
-            isShooting = true;
-        }
+       // if (KeyBoardManager.ShootPressed() && !isShooting)
+       // {
+       //     isShooting = true;
+       // }
 
         if (isShooting && ammoLeftInMagazine >= 1)
         {
@@ -156,18 +156,18 @@ public class WeaponNumber : MonoBehaviour
     }
     public void SetTotalAmmoCountAndReloadAmount()
     {
-        if (KeyBoardManager.ReloadPressed())
-        {
-            if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
-            {
-                totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
-                ammoLeftInMagazine += (magazineCapacity - ammoLeftInMagazine);
-            }
-            else if (totalAmmoCount < magazineCapacity && totalAmmoCount < (magazineCapacity - ammoLeftInMagazine))
-            {
-                ammoLeftInMagazine += totalAmmoCount;
-                totalAmmoCount = 0;
-            }                
-        }
+        //if (KeyBoardManager.ReloadPressed())
+        //{
+        //    if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
+        //    {
+        //        totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
+        //        ammoLeftInMagazine += (magazineCapacity - ammoLeftInMagazine);
+        //    }
+        //    else if (totalAmmoCount < magazineCapacity && totalAmmoCount < (magazineCapacity - ammoLeftInMagazine))
+        //    {
+        //        ammoLeftInMagazine += totalAmmoCount;
+        //        totalAmmoCount = 0;
+        //    }                
+        //}
     }
 }
