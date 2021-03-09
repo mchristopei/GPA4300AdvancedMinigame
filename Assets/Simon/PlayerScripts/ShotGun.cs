@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShotGun : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
-    [SerializeField] private Camera aimCam;
+    [SerializeField] private GameObject Crosshair;
 
     [SerializeField] private float ammoLeftInMagazine = 0;
     [SerializeField] private float totalAmmoCount;
@@ -27,6 +27,11 @@ public class ShotGun : MonoBehaviour
     private PlayerStats playerStats;
     private bool isAiming;
     private float aimTimer;
+
+    private void Awake()
+    {
+        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
+    }
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -37,8 +42,6 @@ public class ShotGun : MonoBehaviour
         maxAmmoAmount = 50;
         magazineCapacity = 10;
         timeBetweenShots = 1f;
-
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
 
         initMaxAmmoCount = maxAmmoAmount;
         initDamageAmaount = damage;
@@ -53,7 +56,31 @@ public class ShotGun : MonoBehaviour
 
     private void Update()
     {
+        Aim();
         Shoot();
+    }
+    private void Aim()
+    {
+        if (KeyBoardManager.AimPressed())
+        {
+            isAiming = true;
+            aimTimer += Time.deltaTime;
+
+            if (aimTimer >= 0.25f)
+            {
+                camera.fieldOfView = 50;
+                camera.nearClipPlane = 0.75f;
+                Crosshair.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            camera.fieldOfView = 140;
+            camera.nearClipPlane = 0.01f;
+            Crosshair.gameObject.SetActive(false);
+            isAiming = false;
+            aimTimer = 0.0f;
+        }
     }
     private void statsUpgradeManager()
     {

@@ -17,6 +17,10 @@ using UnityEngine;
     private static KeyCode UseItemKey = KeyCode.K;
     private static KeyCode switchItemsKey = KeyCode.I;
 
+    public static bool RifleActive;
+    public static bool PistolActive;
+    public static bool HeavyActive;
+    public static bool SniperActive;
     public static bool switchItems()
     {
         if(Input.GetKey(switchItemsKey)) { return true; }

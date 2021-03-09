@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sniper : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
-    [SerializeField] private Camera aimCam;
+    [SerializeField] private GameObject Crosshair;
 
     [SerializeField] private float ammoLeftInMagazine = 0;
     [SerializeField] private float totalAmmoCount;
@@ -27,6 +27,11 @@ public class Sniper : MonoBehaviour
     private PlayerStats playerStats;
     private bool isAiming;
     private float aimTimer;
+
+    private void Awake()
+    {
+        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
+    }
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -38,7 +43,6 @@ public class Sniper : MonoBehaviour
         magazineCapacity = 8;
         timeBetweenShots = 2f;
 
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
 
         initMaxAmmoCount = maxAmmoAmount;
         initDamageAmaount = damage;
@@ -53,8 +57,8 @@ public class Sniper : MonoBehaviour
 
     private void Update()
     {
-        Shoot();
         Aim();
+        Shoot();
     }
     private void Aim()
     {
@@ -65,14 +69,16 @@ public class Sniper : MonoBehaviour
 
             if (aimTimer >= 0.25f)
             {
-                camera.gameObject.SetActive(false);
-                aimCam.gameObject.SetActive(true);
+                camera.fieldOfView = 50;
+                camera.nearClipPlane = 0.75f;
+                Crosshair.gameObject.SetActive(true);
             }
         }
         else
         {
-            camera.gameObject.SetActive(true);
-            aimCam.gameObject.SetActive(false);
+            camera.fieldOfView = 140;
+            camera.nearClipPlane = 0.01f;
+            Crosshair.gameObject.SetActive(false);
             isAiming = false;
             aimTimer = 0.0f;
         }

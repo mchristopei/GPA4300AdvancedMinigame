@@ -323,7 +323,7 @@ public class UpgradeMenu : MonoBehaviour
         }
         if (downgradeAmmoCapacity)
         {
-            if (boolLimit == 1 && !downgradingDamage)
+            if (boolLimit == 1 && !downgradeAmmoCapacity)
             {
                 downgradeAmmoCapacity = false;
             }

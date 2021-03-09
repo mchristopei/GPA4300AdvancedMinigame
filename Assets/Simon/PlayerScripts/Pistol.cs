@@ -5,7 +5,6 @@ using UnityEngine;
 public class Pistol : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
-    [SerializeField] private Camera aimCam;
 
     [SerializeField] private float ammoLeftInMagazine = 0;
     [SerializeField] private float totalAmmoCount;
@@ -27,6 +26,11 @@ public class Pistol : MonoBehaviour
     private PlayerStats playerStats;
     private bool isAiming;
     private float aimTimer;
+    private void Awake()
+    {
+        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
+    }
+
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -38,7 +42,6 @@ public class Pistol : MonoBehaviour
         magazineCapacity = 10;
         timeBetweenShots = 1f;
 
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
 
         initMaxAmmoCount = maxAmmoAmount;
         initDamageAmaount = damage;
@@ -71,7 +74,7 @@ public class Pistol : MonoBehaviour
         {
             isShooting = false;
         }
-        if (KeyBoardManager.PistolShootPressed())
+        if (KeyBoardManager.ShootPressed())
         {
             isShooting = true;
         }
