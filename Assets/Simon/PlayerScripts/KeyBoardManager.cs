@@ -66,7 +66,7 @@ using UnityEngine;
         if (Input.GetKey(ShootKey)) { return true; }
         else { return false; }
     }
-    public static bool PistolShootPressed()
+    public static bool SingleShootPressed()
     {
         if (Input.GetKeyDown(ShootKey)) { return true; }
         else { return false; }

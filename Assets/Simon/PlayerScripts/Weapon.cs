@@ -2,73 +2,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-
-public class Gun : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
-    [SerializeField] new private Camera camera;
-    [SerializeField] private Camera aimCam;
 
-    [SerializeField] private float ammoLeftInMagazine = 0;
-    [SerializeField] private float totalAmmoCount;
-    [SerializeField] private float maxAmmoAmount = 0;
-    [SerializeField] private float damage = 0.0f;
-    [SerializeField] private float range = 0.0f;
-    [SerializeField] private float magazineCapacity = 0;
-    [SerializeField] private float timeBetweenShots = 0.0f;
+    new public Camera camera;
+    public GameObject Crosshair;
 
-    private float initMaxAmmoCount;
-    private float initDamageAmaount;
-    private float initRangeAmount;
-    private float initMagazineCapacity;
+    [SerializeField] protected private float RegularFov = 50;
+    [SerializeField] protected private float AimFov = 140;
 
-    private bool isShooting = false;
-    private float timer = 0.0f;
-    private float shotTimer = 0.0f;
+    [SerializeField] protected private float regNearClippingPlane = 0.01f;
+    [SerializeField] protected private float aimNearClippingPlane = 0.75f;
 
-    private PlayerStats playerStats;
-    private bool isAiming;
-    private float aimTimer;
-    void Start()
+    [SerializeField] protected private float ammoLeftInMagazine = 0;
+    [SerializeField] protected private float totalAmmoCount;
+    [SerializeField] protected private float maxAmmoAmount = 0;
+    [SerializeField] protected private float damage = 0.0f;
+    [SerializeField] protected private float range = 0.0f;
+    [SerializeField] protected private float magazineCapacity = 0;
+    [SerializeField] protected private float timeBetweenShots = 0.0f;
+
+    protected private float initMaxAmmoCount;
+    protected private float initDamageAmaount;
+    protected private float initRangeAmount;
+    protected private float initMagazineCapacity;
+
+    protected private bool isShooting = false;
+    protected private float timer = 0.0f;
+    protected private float shotTimer = 0.0f;
+
+    protected private PlayerStats playerStats;
+    protected private bool isAiming;
+    protected private float aimTimer;
+
+    //UI
+    public Text currentMagazineAmmo;
+    public Text currentAmmo;
+
+    private void Awake()
     {
+    }
+    public void Start()
+    {
+
+        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
         playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
-
-        switch (gameObject.name)
-        {
-            case "Pistol":
-                damage = 20f;
-                range = 50f;
-                maxAmmoAmount = 50;
-                magazineCapacity = 10;
-                timeBetweenShots = 1f;
-                break;
-            case "Rifle":
-                damage = 10f;
-                range = 100f;
-                maxAmmoAmount = 200;
-                magazineCapacity = 50;
-                timeBetweenShots = 0.25f;
-                break;
-            case "Shotgun":
-                damage = 30f;
-                range = 30f;
-                maxAmmoAmount = 50;
-                magazineCapacity = 5;
-                timeBetweenShots = 0.5f;
-                break;
-            case "Sniper":
-                damage = 30f;
-                range = 250f;
-                maxAmmoAmount = 60;
-                magazineCapacity = 8;
-                timeBetweenShots = 2f;
-                break;
-            default:
-                Destroy(gameObject);
-                break;
-        }
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
+        ConfigInitValues();
 
         initMaxAmmoCount = maxAmmoAmount;
         initDamageAmaount = damage;
@@ -76,45 +58,45 @@ public class Gun : MonoBehaviour
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
     }
-    private void OnLevelRaised(PlayerStats.StatType type, int level)
+    public virtual void ConfigInitValues()
+    { 
+        
+    }
+    public void OnLevelRaised(PlayerStats.StatType type, int level)
     {
         statsUpgradeManager();
     }
 
-    private void Update()
+    public void Update()
     {
-        if(gameObject.name == "Rifle")
-        {
-            RifleShoot();
-        }
-        if (gameObject.name == "Pistol")
-        {
-            PistolShoot();
-        }
+        
         Aim();
+        Shoot();
     }
-    private void Aim()
+    public void Aim()
     {
         if (KeyBoardManager.AimPressed())
         {
             isAiming = true;
             aimTimer += Time.deltaTime;
 
-            if(aimTimer >= 0.25f)
+            if (aimTimer >= 0.25f)
             {
-                camera.gameObject.SetActive(false);
-                aimCam.gameObject.SetActive(true);
+                camera.fieldOfView = AimFov;
+                camera.nearClipPlane = aimNearClippingPlane;
+                Crosshair.gameObject.SetActive(true);
             }
         }
         else
         {
-            camera.gameObject.SetActive(true);
-            aimCam.gameObject.SetActive(false);
+            camera.fieldOfView = RegularFov;
+            camera.nearClipPlane = regNearClippingPlane;
+            Crosshair.gameObject.SetActive(false);
             isAiming = false;
             aimTimer = 0.0f;
         }
     }
-    private void statsUpgradeManager()
+    public void statsUpgradeManager()
     {
         damage = initDamageAmaount * (playerStats.GunDamageUpgradeAmount);
         range = initRangeAmount * playerStats.GunRangeUpgradeAmount;
@@ -123,46 +105,25 @@ public class Gun : MonoBehaviour
 
         totalAmmoCount = maxAmmoAmount;
         ammoLeftInMagazine = magazineCapacity;
+        currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
+        currentAmmo.text = Convert.ToString(totalAmmoCount);
     }
-    private void PistolShoot()
+
+    public virtual void GetInput()
     {
-        if(shotTimer >= timeBetweenShots)
-        {
-            isShooting = false;
-        }
-        if (KeyBoardManager.SingleShootPressed())
-        {
-            isShooting = true;
-        }
-        if(isShooting)
-        {
-            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
-            {
-                ShootRayCast();
-                ammoLeftInMagazine -= 1;
-            }
 
-            shotTimer += Time.deltaTime;
-
-        }
-        if(!isShooting)
-        {
-            shotTimer = 0.0f;
-        }
-        SetTotalAmmoCountAndReloadAmount();
     }
-    private void RifleShoot()
+    public void Shoot()
     {
-        if (KeyBoardManager.ShootPressed())
-        {
-            isShooting = true;
-        }
+        GetInput();
         if (isShooting)
         {
             if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
             {
                 ShootRayCast();
                 ammoLeftInMagazine -= 1;
+                currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
+                currentAmmo.text = Convert.ToString(totalAmmoCount);
             }
 
             shotTimer += Time.deltaTime;
@@ -178,7 +139,7 @@ public class Gun : MonoBehaviour
         }
         SetTotalAmmoCountAndReloadAmount();
     }
-    void ShootRayCast()
+    public void ShootRayCast()
     {
         RaycastHit hit;
         if (Physics.Raycast(camera.transform.position + camera.transform.forward.normalized, camera.transform.forward, out hit, range))
@@ -235,7 +196,8 @@ public class Gun : MonoBehaviour
                 ammoLeftInMagazine += totalAmmoCount;
                 totalAmmoCount = 0;
             }
+            currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
+            currentAmmo.text = Convert.ToString(totalAmmoCount);
         }
     }
 }
-

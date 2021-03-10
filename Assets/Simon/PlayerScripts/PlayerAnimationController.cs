@@ -14,9 +14,17 @@ public class PlayerAnimationController : MonoBehaviour
        playerAnimator.SetBool("Meelee", KeyBoardManager.MeeleePressed());
        playerAnimator.SetBool("Grenade", KeyBoardManager.GrenadePressed());
        playerAnimator.SetBool("ShowLove", KeyBoardManager.ShowLovePressed());
-       playerAnimator.SetBool("Shoot", KeyBoardManager.ShootPressed());
-       playerAnimator.SetBool("PistolActive", KeyBoardManager.PistolActive);
+        
+        if(KeyBoardManager.RifleActive)
+        {
+            playerAnimator.SetBool("Shoot", KeyBoardManager.ShootPressed());
+        }
+        if(KeyBoardManager.PistolActive || KeyBoardManager.SniperActive || KeyBoardManager.HeavyActive)
+        {
+            playerAnimator.SetBool("Shoot", KeyBoardManager.SingleShootPressed());
+        }
        playerAnimator.SetBool("RifleActive", KeyBoardManager.RifleActive);
+       playerAnimator.SetBool("PistolActive", KeyBoardManager.PistolActive);
        playerAnimator.SetBool("HeavyActive", KeyBoardManager.HeavyActive);
        playerAnimator.SetBool("SniperActive", KeyBoardManager.SniperActive);
     }

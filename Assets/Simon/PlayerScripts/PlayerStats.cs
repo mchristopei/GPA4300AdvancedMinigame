@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class PlayerStats : MonoBehaviour
         AmmoCapacity,
         MagazineCapacity
     }
-
+    [SerializeField] private Slider healthBar;
     [SerializeField] int level;
     [SerializeField] public float defense;
     [SerializeField] public float health;
