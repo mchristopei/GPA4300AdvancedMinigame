@@ -70,28 +70,28 @@ public class SwitchWeapon1 : MonoBehaviour
     }
     void SetAnimation()
     {
-        if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].name == "Rifle")
+        if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Rifle>(out Rifle rifle))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = false;
             KeyBoardManager.RifleActive = true;
         }
-        else if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].name == "Pistol")
+        else if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Pistol>(out Pistol pistol))
         {
             KeyBoardManager.PistolActive = true;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = false;
             KeyBoardManager.RifleActive = false;
         }
-        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].name == "Sniper")
+        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Sniper>(out Sniper sniper))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = true;
             KeyBoardManager.RifleActive = false;
         }
-        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].name == "Heavy")
+        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<ShotGun>(out ShotGun shotGun))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = true;
