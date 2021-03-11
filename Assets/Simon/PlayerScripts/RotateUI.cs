@@ -13,21 +13,31 @@ public class RotateUI : MonoBehaviour
         {
             Reloading = true;
         }
-        else
-        {
-            transform.Rotate(Vector3.forward * Time.deltaTime * 20f);
-        }
+
         if(Reloading)
         {
-            rotationOffset += Time.deltaTime * 2;
             timer += Time.deltaTime;
-            transform.Rotate(Vector3.forward * Time.deltaTime * 50f * rotationOffset);
-            if(timer > 5f)
+            if(timer < 3.0f)
+            {
+                rotationOffset += Time.deltaTime * 3;
+                transform.Rotate(Vector3.forward * Time.deltaTime * 50f * rotationOffset);
+            }
+            if(timer > 3.0f && timer < 6f)
+            {
+                rotationOffset -= Time.deltaTime * 9;
+                transform.Rotate((Vector3.forward * Time.deltaTime * 50f) *rotationOffset);
+            }
+            if (timer > 4.0f)
             {
                 Reloading = false;
                 rotationOffset = 0.0f;
                 timer = 0.0f;
             }
+        }
+        else
+        {
+            transform.Rotate(Vector3.forward * Time.deltaTime * 30f);
+
         }
     }
 }

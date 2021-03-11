@@ -21,6 +21,7 @@ using UnityEngine;
     public static bool PistolActive;
     public static bool HeavyActive;
     public static bool SniperActive;
+    public static bool isReloading;
     public static bool switchItems()
     {
         if(Input.GetKey(switchItemsKey)) { return true; }

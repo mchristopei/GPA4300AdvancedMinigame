@@ -5229,7 +5229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60fca5d6377c3384191fcf5540561e3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedWeapon: 0
+  selectedWeapon: {fileID: 7324876576120887819}
   CanSwitch: 1
 --- !u!1 &4421656711494885883
 GameObject:
@@ -6543,7 +6543,7 @@ ParentConstraint:
   m_RotationOffsets:
   - {x: 0.13070938, y: 0.25060403, z: -1.8471613}
   m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
+  m_AffectTranslationY: 0
   m_AffectTranslationZ: 1
   m_AffectRotationX: 1
   m_AffectRotationY: 1

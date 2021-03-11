@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class SwitchWeapon1 : MonoBehaviour
 {
-    List<GameObject> weapons;
-    [SerializeField] private int selectedWeapon = 0;
+    [SerializeField] private GameObject selectedWeapon;
+
     public bool CanSwitch = false;
     private float switchTimer = 0.0f;
-    private bool switchWeapon = false;
+    private bool switchingWeapon = false;
 
     void Awake()
     {
@@ -25,73 +25,89 @@ public class SwitchWeapon1 : MonoBehaviour
 
         if (!CanSwitch)
         return;
-        int previousSelectedWeapon = selectedWeapon;
-
         if (Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
-            
-            if (selectedWeapon >= PlayerInventory.WeaponsInInventoryList.Count - 1)
-                selectedWeapon = 0;
-            else
-                selectedWeapon++;
+            CanSwitch = false;
+            StartCoroutine(SwitchWeapon(1));
         }
-
+        
         if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
-            if (selectedWeapon <= 0)
-                selectedWeapon = PlayerInventory.WeaponsInInventoryList.Count - 1;
-            else
-                selectedWeapon--;
+            CanSwitch = false;
+            StartCoroutine(SwitchWeapon(-1));
         }
-
-        if (previousSelectedWeapon != selectedWeapon)
+    } 
+    IEnumerator SwitchWeapon(int number)
+    {
+        GameObject lastWeapon = selectedWeapon;
+        int i = PlayerInventory.WeaponsInInventoryList.IndexOf(selectedWeapon);
+        i += number;
+        if(i >= PlayerInventory.WeaponsInInventoryList.Count)
         {
-            SelectWeapon();
+            i = 0;
         }
+        if(i < 0)
+        {
+            i = PlayerInventory.WeaponsInInventoryList.Count - 1;
+        }
+        selectedWeapon = PlayerInventory.WeaponsInInventoryList[i];
+
+        SetAnimation();
+        yield return new WaitForSeconds(0.5f);
+
+        lastWeapon.SetActive(false);
+        lastWeapon.tag = "Unequipped";
+
+        selectedWeapon.SetActive(true);
+        selectedWeapon.tag = "Equipped";
+
+        yield return new WaitForSeconds(0.5f);
+
+        CanSwitch = true;
     }
     void SelectWeapon()
     {
-        int i = 0;
         foreach (GameObject gun in PlayerInventory.WeaponsInInventoryList)
         {
-            if (i == selectedWeapon)
-            {
-                gun.gameObject.SetActive(true);
-                gun.gameObject.tag = "Equipped";
-            }
-            else
-            {
-                gun.gameObject.SetActive(false);
-                gun.gameObject.tag = "Unequipped";
-            }
-            i++;
+
+                if (gun == selectedWeapon)
+                {
+                    gun.SetActive(true);
+                    gun.tag = "Equipped";
+                }
+                else
+                {
+                    gun.SetActive(false);
+                    gun.tag = "Unequipped";
+                }
         }
+        
         SetAnimation();
     }
     void SetAnimation()
     {
-        if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Rifle>(out Rifle rifle))
+        if(selectedWeapon.TryGetComponent<Rifle>(out Rifle rifle))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = false;
             KeyBoardManager.RifleActive = true;
         }
-        else if(PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Pistol>(out Pistol pistol))
+        else if(selectedWeapon.TryGetComponent<Pistol>(out Pistol pistol))
         {
             KeyBoardManager.PistolActive = true;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = false;
             KeyBoardManager.RifleActive = false;
         }
-        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<Sniper>(out Sniper sniper))
+        else if (selectedWeapon.TryGetComponent<Sniper>(out Sniper sniper))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = false;
             KeyBoardManager.SniperActive = true;
             KeyBoardManager.RifleActive = false;
         }
-        else if (PlayerInventory.WeaponsInInventoryList[selectedWeapon].gameObject.TryGetComponent<ShotGun>(out ShotGun shotGun))
+        else if (selectedWeapon.TryGetComponent<ShotGun>(out ShotGun shotGun))
         {
             KeyBoardManager.PistolActive = false;
             KeyBoardManager.HeavyActive = true;

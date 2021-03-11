@@ -10,7 +10,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
        playerAnimator.SetBool("Aiming",KeyBoardManager.AimPressed());
        playerAnimator.SetBool("Crouch", KeyBoardManager.CrouchPressed());
-       playerAnimator.SetBool("Reload", KeyBoardManager.ReloadPressed());
+       playerAnimator.SetBool("Reload", KeyBoardManager.isReloading);
        playerAnimator.SetBool("Meelee", KeyBoardManager.MeeleePressed());
        playerAnimator.SetBool("Grenade", KeyBoardManager.GrenadePressed());
        playerAnimator.SetBool("ShowLove", KeyBoardManager.ShowLovePressed());

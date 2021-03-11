@@ -37,6 +37,8 @@ public class Weapon : MonoBehaviour
     protected private bool isAiming;
     protected private float aimTimer;
 
+    protected private float ReloadTimer = 0.0f;
+
     //UI
     public Text currentMagazineAmmo;
     public Text currentAmmo;
@@ -46,7 +48,7 @@ public class Weapon : MonoBehaviour
     }
     public void Start()
     {
-
+        KeyBoardManager.isReloading = false;
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
         playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
@@ -69,9 +71,8 @@ public class Weapon : MonoBehaviour
 
     public void Update()
     {
-        
-        Aim();
-        Shoot();
+            Aim();
+            Shoot();
     }
     public void Aim()
     {
@@ -118,12 +119,15 @@ public class Weapon : MonoBehaviour
         GetInput();
         if (isShooting)
         {
-            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+            if(!KeyBoardManager.isReloading)
             {
-                ShootRayCast();
-                ammoLeftInMagazine -= 1;
-                currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
-                currentAmmo.text = Convert.ToString(totalAmmoCount);
+                if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+                {
+                    ShootRayCast();
+                    ammoLeftInMagazine -= 1;
+                    currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
+                    currentAmmo.text = Convert.ToString(totalAmmoCount);
+                }
             }
 
             shotTimer += Time.deltaTime;
@@ -186,6 +190,7 @@ public class Weapon : MonoBehaviour
     {
         if (KeyBoardManager.ReloadPressed())
         {
+            KeyBoardManager.isReloading = true;
             if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
             {
                 totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
@@ -198,6 +203,15 @@ public class Weapon : MonoBehaviour
             }
             currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
             currentAmmo.text = Convert.ToString(totalAmmoCount);
+        }
+        if(KeyBoardManager.isReloading)
+        {
+            ReloadTimer += Time.deltaTime;
+            if(ReloadTimer >=3.75f)
+            {
+                KeyBoardManager.isReloading = false;
+                ReloadTimer = 0.0f;
+            }
         }
     }
 }
