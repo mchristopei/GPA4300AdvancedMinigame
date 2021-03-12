@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemMenu : MonoBehaviour
 {
     private int equippedPowerUp = 1;
+    private KeyBoardManager keyBoardManager;
 
-
-    private int plusJumpItemCount = 3;
-    private int plusDefenseItemCount = 3;
-    private int plusDamageItemCount = 3;
+    [SerializeField] protected private int plusJumpItemCount = 3;
+    [SerializeField] protected private int plusDefenseItemCount = 3;
+    [SerializeField] protected private int plusDamageItemCount = 3;
     private float timeSinceItemUsed;
     [SerializeField] private float itemUpgradeTime = 5f;
     private PlayerStats playerStats;
@@ -18,8 +20,15 @@ public class ItemMenu : MonoBehaviour
 
     private List<int> itemTypes;
 
+    [SerializeField] private GameObject plusJumpItem;
+    [SerializeField] private GameObject plusDefenseItem;
+    [SerializeField] private GameObject plusDamageItem;
+    [SerializeField] private SpriteRenderer uiCircle;
+    [SerializeField] private Text potionCount;
+    [SerializeField] private Text equippedItem;
     private void Start()
     {
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
         itemTypes = new List<int>();
         itemTypes.Add(plusDamageItemCount);
         itemTypes.Add(plusDefenseItemCount);
@@ -27,18 +36,63 @@ public class ItemMenu : MonoBehaviour
 
         timeSinceItemUsed = 5f;
         playerStats = FindObjectOfType<PlayerStats>();
+
+        equippedPowerUp = 1;
+        plusDamageItem.SetActive(true);
+        plusDefenseItem.SetActive(false);
+        plusJumpItem.SetActive(false);
+        potionCount.text = Convert.ToString(plusDamageItemCount);
     }
     private void Update()
     {
-        if(KeyBoardManager.switchItems() && !usingItem)
+        if(!usingItem)
+        {
+            uiCircle.transform.Rotate(Vector3.forward * Time.deltaTime * 20f);
+            uiCircle.color = Color.red;
+        }
+        else if(usingItem)
+        {
+            uiCircle.transform.Rotate(Vector3.forward * Time.deltaTime * 80f);
+            uiCircle.color = Color.green;
+        }
+        if(keyBoardManager.switchItems() && !usingItem)
         {
             equippedPowerUp += 1;
-            if(equippedPowerUp == 4)
+            if(equippedPowerUp == 1)
             {
-                equippedPowerUp = 1;
+                plusDamageItem.SetActive(true);
+                plusDefenseItem.SetActive(false);
+                plusJumpItem.SetActive(false);
+                potionCount.text = Convert.ToString(plusDamageItemCount);
+                equippedItem.text = "PlusDamageBoost";
+            }
+            else if(equippedPowerUp == 2)
+            {
+                plusDamageItem.SetActive(false);
+                plusDefenseItem.SetActive(true);
+                plusJumpItem.SetActive(false);
+                potionCount.text = Convert.ToString(plusDefenseItemCount);   
+                equippedItem.text = "PlusDefenseBoost";
+            }
+            else if(equippedPowerUp == 3)
+            {
+                plusDamageItem.SetActive(false);
+                plusDefenseItem.SetActive(false);
+                plusJumpItem.SetActive(true);
+                potionCount.text = Convert.ToString(plusJumpItemCount);   
+                equippedItem.text = "PlusJumpBoost";
+            }
+            else if(equippedPowerUp == 4)
+            {
+                equippedPowerUp = 1; 
+                plusDamageItem.SetActive(true);
+                plusDefenseItem.SetActive(false);
+                plusJumpItem.SetActive(false);
+                potionCount.text = Convert.ToString(plusDamageItemCount);
+
             }
         }
-        if (KeyBoardManager.useItemKey() && timeSinceItemUsed == itemUpgradeTime)
+        if (keyBoardManager.useItemKey() && timeSinceItemUsed == itemUpgradeTime)
         {
             if (equippedPowerUp == 1)
             {
@@ -46,6 +100,7 @@ public class ItemMenu : MonoBehaviour
                 {
                     usingItem = true;
                     plusDamageItemCount -= 1;
+                    potionCount.text = Convert.ToString(plusDamageItemCount);   
                     playerStats.GunDamageUpgradeAmount += 1f;
                 }
             }
@@ -55,6 +110,7 @@ public class ItemMenu : MonoBehaviour
                 {
                     usingItem = true;
                     plusDefenseItemCount -= 1;
+                    potionCount.text = Convert.ToString(plusDefenseItemCount);   
                     playerStats.defense += 10;
                 }
             }
@@ -64,7 +120,8 @@ public class ItemMenu : MonoBehaviour
                 {
                     usingItem = true;
                     plusJumpItemCount -= 1;
-                    playerStats.JumpStrength += 0.5f;
+                    potionCount.text = Convert.ToString(plusJumpItemCount);   
+                    playerStats.JumpStrength += 2f;
                 }
             }
         }
@@ -84,7 +141,7 @@ public class ItemMenu : MonoBehaviour
             }
             else if (equippedPowerUp == 3)
             {
-                playerStats.JumpStrength -= 0.5f;
+                playerStats.JumpStrength -= 2f;
             }
             usingItem = false;
             timeSinceItemUsed = 5.0f;

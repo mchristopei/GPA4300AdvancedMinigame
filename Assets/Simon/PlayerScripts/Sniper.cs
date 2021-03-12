@@ -20,7 +20,7 @@ public class Sniper : Weapon
     }
     public override void GetInput()
     {
-        if (KeyBoardManager.SingleShootPressed())
+        if (keyBoardManager.SingleShootPressed())
         {
             isShooting = true;
         }

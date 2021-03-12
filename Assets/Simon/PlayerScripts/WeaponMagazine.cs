@@ -5,13 +5,14 @@ using UnityEngine;
 public class WeaponMagazine: MonoBehaviour
 {
     private int weaponCounter = 0;
-
+    private KeyBoardManager keyBoardManager;
     private void Start()
     {
-        KeyBoardManager.PistolActive = false;
-        KeyBoardManager.HeavyActive = false;
-        KeyBoardManager.SniperActive = false;
-        KeyBoardManager.RifleActive = true;
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
+        keyBoardManager.PistolActive = false;
+        keyBoardManager.HeavyActive = false;
+        keyBoardManager.SniperActive = false;
+        keyBoardManager.RifleActive = true;
 
         PlayerInventory.WeaponsInInventoryList[0].SetActive(true);
         PlayerInventory.WeaponsInInventoryList[1].SetActive(false);
@@ -21,7 +22,7 @@ public class WeaponMagazine: MonoBehaviour
     
     private void Update()
     {
-        if(KeyBoardManager.SwitchWeaponPressed())
+        if(keyBoardManager.SwitchWeaponPressed())
         {
             Debug.Log(PlayerInventory.WeaponsInInventoryList.Count);
                 PlayerInventory.WeaponsInInventoryList[weaponCounter].SetActive(false);
@@ -44,28 +45,28 @@ public class WeaponMagazine: MonoBehaviour
         switch (PlayerInventory.WeaponsInInventoryList[weaponCounter].name)
         {
             case "Pistol":
-                KeyBoardManager.RifleActive = false;
-                KeyBoardManager.HeavyActive = false;
-                KeyBoardManager.SniperActive = false;
-                KeyBoardManager.PistolActive = true;
+                keyBoardManager.RifleActive = false;
+                keyBoardManager.HeavyActive = false;
+                keyBoardManager.SniperActive = false;
+                keyBoardManager.PistolActive = true;
                 break;
             case "Rifle":
-                KeyBoardManager.PistolActive = false;
-                KeyBoardManager.SniperActive = false;
-                KeyBoardManager.HeavyActive = false;
-                KeyBoardManager.RifleActive = true;
+                keyBoardManager.PistolActive = false;
+                keyBoardManager.SniperActive = false;
+                keyBoardManager.HeavyActive = false;
+                keyBoardManager.RifleActive = true;
                 break;
             case "Heavy":
-                KeyBoardManager.PistolActive = false;
-                KeyBoardManager.RifleActive = false;
-                KeyBoardManager.SniperActive = false;
-                KeyBoardManager.HeavyActive = true;
+                keyBoardManager.PistolActive = false;
+                keyBoardManager.RifleActive = false;
+                keyBoardManager.SniperActive = false;
+                keyBoardManager.HeavyActive = true;
                 break;
             case "Sniper":
-                KeyBoardManager.PistolActive = false;
-                KeyBoardManager.RifleActive = false;
-                KeyBoardManager.HeavyActive = false;
-                KeyBoardManager.SniperActive = true;
+                keyBoardManager.PistolActive = false;
+                keyBoardManager.RifleActive = false;
+                keyBoardManager.HeavyActive = false;
+                keyBoardManager.SniperActive = true;
                 break;
             default:
                 Destroy(gameObject);

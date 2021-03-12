@@ -4,28 +4,75 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    [SerializeField] private Animator playerAnimator;
+    private Animator playerAnimator;
+    private KeyBoardManager keyBoardManager;
+    private bool aiming = false;
+    private bool crouching = false;
+    private bool shooting = false;
+    private bool reloading = false;
+    private bool meeleeing = false;
+    private bool grenadeThrow = false;
+    private bool showingLove = false;
 
+    private bool rifleActive;
+    private bool pistolActive;
+    private bool sniperActive;
+    private bool heavyActive;
+    private void Start()
+    {
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
+        playerAnimator = FindObjectOfType<PlayerAnimationController>().GetComponent<Animator>();
+    }
     void Update()
     {
-       playerAnimator.SetBool("Aiming",KeyBoardManager.AimPressed());
-       playerAnimator.SetBool("Crouch", KeyBoardManager.CrouchPressed());
-       playerAnimator.SetBool("Reload", KeyBoardManager.isReloading);
-       playerAnimator.SetBool("Meelee", KeyBoardManager.MeeleePressed());
-       playerAnimator.SetBool("Grenade", KeyBoardManager.GrenadePressed());
-       playerAnimator.SetBool("ShowLove", KeyBoardManager.ShowLovePressed());
+        KeyHandling("Aiming", keyBoardManager.AimPressed(), aiming);
+        KeyHandling("Crouch", keyBoardManager.CrouchPressed(), crouching);
+        playerAnimator.SetBool("Reload", keyBoardManager.isReloading);
+        //playerAnimator.SetBool("Aiming", keyBoardManager.AimPressed());
+        //KeyHandling("Reload", keyBoardManager.ReloadPressed(), reloading);
+        KeyHandling("Meelee", keyBoardManager.MeeleePressed(), meeleeing);
+        KeyHandling("Grenade", keyBoardManager.GrenadePressed(), grenadeThrow);
+        KeyHandling("ShowLove", keyBoardManager.ShowLovePressed(), showingLove);
+        KeyHandling("RifleActive", keyBoardManager.RifleActive, rifleActive);
+        KeyHandling("PistolActive", keyBoardManager.PistolActive, pistolActive);
+        KeyHandling("SniperActive", keyBoardManager.SniperActive, sniperActive);
+        KeyHandling("HeavyActive", keyBoardManager.HeavyActive, heavyActive);
+        if (keyBoardManager.RifleActive)
+        {
+            if(keyBoardManager.outOfAmmo)
+            {
+                playerAnimator.SetBool("Shoot", false);
+            }
+            else
+            {
+                playerAnimator.SetBool("Shoot", keyBoardManager.ShootPressed());
+            }
+        }
         
-        if(KeyBoardManager.RifleActive)
+        if ((keyBoardManager.PistolActive || keyBoardManager.SniperActive || keyBoardManager.HeavyActive) && !keyBoardManager.outOfAmmo)
         {
-            playerAnimator.SetBool("Shoot", KeyBoardManager.ShootPressed());
+            if (keyBoardManager.outOfAmmo)
+            {
+                playerAnimator.SetBool("Shoot", false);
+            }
+            else
+            {
+                playerAnimator.SetBool("Shoot", keyBoardManager.SingleShootPressed());
+            }
         }
-        if(KeyBoardManager.PistolActive || KeyBoardManager.SniperActive || KeyBoardManager.HeavyActive)
+    }
+
+    void KeyHandling(string parameter, bool key, bool action)
+    {
+        if (key)
         {
-            playerAnimator.SetBool("Shoot", KeyBoardManager.SingleShootPressed());
+            action = true;
+            playerAnimator.SetBool(parameter, true);
         }
-       playerAnimator.SetBool("RifleActive", KeyBoardManager.RifleActive);
-       playerAnimator.SetBool("PistolActive", KeyBoardManager.PistolActive);
-       playerAnimator.SetBool("HeavyActive", KeyBoardManager.HeavyActive);
-       playerAnimator.SetBool("SniperActive", KeyBoardManager.SniperActive);
+        else
+        {
+            action = false;
+            playerAnimator.SetBool(parameter, false);
+        }
     }
 }

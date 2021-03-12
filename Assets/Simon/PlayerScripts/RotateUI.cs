@@ -7,9 +7,15 @@ public class RotateUI : MonoBehaviour
     private bool Reloading;
     private float timer = 0.0f;
     private float rotationOffset = 0.0f;
+    private KeyBoardManager keyBoardManager;
+
+    private void Start()
+    {
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
+    }
     void Update()
     {
-        if(KeyBoardManager.ReloadPressed())
+        if(keyBoardManager.ReloadPressed())
         {
             Reloading = true;
         }

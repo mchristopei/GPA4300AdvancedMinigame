@@ -15,6 +15,8 @@ public class JumpCR : MonoBehaviour
     private Rigidbody rb;
     private bool jumpPressed;
     private KeyCode jumpKey = KeyCode.Space;
+
+
     private void Start()
     {
         x = jumpStrength;

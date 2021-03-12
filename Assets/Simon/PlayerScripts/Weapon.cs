@@ -10,8 +10,10 @@ public class Weapon : MonoBehaviour
     new public Camera camera;
     public GameObject Crosshair;
 
-    [SerializeField] protected private float RegularFov = 50;
-    [SerializeField] protected private float AimFov = 140;
+    protected private KeyBoardManager keyBoardManager;
+
+    [SerializeField] protected private float RegularFov = 60.0f;
+    [SerializeField] protected private float AimFov = 140.0f;
 
     [SerializeField] protected private float regNearClippingPlane = 0.01f;
     [SerializeField] protected private float aimNearClippingPlane = 0.75f;
@@ -45,10 +47,12 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
+        
     }
     public void Start()
     {
-        KeyBoardManager.isReloading = false;
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
+        keyBoardManager.isReloading = false;
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
         playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
@@ -71,12 +75,20 @@ public class Weapon : MonoBehaviour
 
     public void Update()
     {
+        if(ammoLeftInMagazine == 0)
+        {
+            keyBoardManager.outOfAmmo = true;
+        }
+        if (!keyBoardManager.outOfAmmo && keyBoardManager.outOfAmmo == true)
+        {
+            keyBoardManager.outOfAmmo = false;
+        }
             Aim();
             Shoot();
     }
     public void Aim()
     {
-        if (KeyBoardManager.AimPressed())
+        if (keyBoardManager.AimPressed())
         {
             isAiming = true;
             aimTimer += Time.deltaTime;
@@ -119,9 +131,9 @@ public class Weapon : MonoBehaviour
         GetInput();
         if (isShooting)
         {
-            if(!KeyBoardManager.isReloading)
+            if(!keyBoardManager.isReloading)
             {
-                if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+                if (shotTimer == 0.0f && ammoLeftInMagazine > 0)
                 {
                     ShootRayCast();
                     ammoLeftInMagazine -= 1;
@@ -188,9 +200,9 @@ public class Weapon : MonoBehaviour
     }
     public void SetTotalAmmoCountAndReloadAmount()
     {
-        if (KeyBoardManager.ReloadPressed())
+        if (keyBoardManager.ReloadPressed())
         {
-            KeyBoardManager.isReloading = true;
+            keyBoardManager.isReloading = true;
             if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
             {
                 totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
@@ -204,12 +216,12 @@ public class Weapon : MonoBehaviour
             currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
             currentAmmo.text = Convert.ToString(totalAmmoCount);
         }
-        if(KeyBoardManager.isReloading)
+        if(keyBoardManager.isReloading)
         {
             ReloadTimer += Time.deltaTime;
             if(ReloadTimer >=3.75f)
             {
-                KeyBoardManager.isReloading = false;
+                keyBoardManager.isReloading = false;
                 ReloadTimer = 0.0f;
             }
         }

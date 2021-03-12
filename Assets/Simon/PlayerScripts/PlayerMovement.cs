@@ -24,21 +24,5 @@ public class PlayerMovement : MonoBehaviour
         transform.position += transform.right * moveHorizontal * moveForce * Time.deltaTime;
         transform.position += transform.forward * moveVertical * moveForce * Time.deltaTime;
     }
-    private void BoolParameter(Animator animator, bool condition, string parameterName)
-    {
-        if (condition)
-        {
-            if (animator.GetBool(parameterName).Equals(false))
-            {
-                animator.SetBool(parameterName, true);
-            }
-        }
-        else
-        {
-            if (animator.GetBool(parameterName).Equals(true))
-            {
-                animator.SetBool(parameterName, false);
-            }
-        }
-    }
+
 }

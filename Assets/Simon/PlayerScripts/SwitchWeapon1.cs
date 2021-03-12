@@ -9,13 +9,14 @@ public class SwitchWeapon1 : MonoBehaviour
     public bool CanSwitch = false;
     private float switchTimer = 0.0f;
     private bool switchingWeapon = false;
-
+    private KeyBoardManager keyBoardManager;
     void Awake()
     {
         PlayerInventory.WeaponsInInventoryList = new List<GameObject>();
     }
     void Start()
     {
+        keyBoardManager = FindObjectOfType<KeyBoardManager>();
         SelectWeapon();
         Debug.Log(PlayerInventory.WeaponsInInventoryList.Count);
     }
@@ -88,31 +89,31 @@ public class SwitchWeapon1 : MonoBehaviour
     {
         if(selectedWeapon.TryGetComponent<Rifle>(out Rifle rifle))
         {
-            KeyBoardManager.PistolActive = false;
-            KeyBoardManager.HeavyActive = false;
-            KeyBoardManager.SniperActive = false;
-            KeyBoardManager.RifleActive = true;
+            keyBoardManager.PistolActive = false;
+            keyBoardManager.HeavyActive = false;
+            keyBoardManager.SniperActive = false;
+            keyBoardManager.RifleActive = true;
         }
         else if(selectedWeapon.TryGetComponent<Pistol>(out Pistol pistol))
         {
-            KeyBoardManager.PistolActive = true;
-            KeyBoardManager.HeavyActive = false;
-            KeyBoardManager.SniperActive = false;
-            KeyBoardManager.RifleActive = false;
+            keyBoardManager.PistolActive = true;
+            keyBoardManager.HeavyActive = false;
+            keyBoardManager.SniperActive = false;
+            keyBoardManager.RifleActive = false;
         }
         else if (selectedWeapon.TryGetComponent<Sniper>(out Sniper sniper))
         {
-            KeyBoardManager.PistolActive = false;
-            KeyBoardManager.HeavyActive = false;
-            KeyBoardManager.SniperActive = true;
-            KeyBoardManager.RifleActive = false;
+            keyBoardManager.PistolActive = false;
+            keyBoardManager.HeavyActive = false;
+            keyBoardManager.SniperActive = true;
+            keyBoardManager.RifleActive = false;
         }
         else if (selectedWeapon.TryGetComponent<ShotGun>(out ShotGun shotGun))
         {
-            KeyBoardManager.PistolActive = false;
-            KeyBoardManager.HeavyActive = true;
-            KeyBoardManager.SniperActive = false;
-            KeyBoardManager.RifleActive = false;
+            keyBoardManager.PistolActive = false;
+            keyBoardManager.HeavyActive = true;
+            keyBoardManager.SniperActive = false;
+            keyBoardManager.RifleActive = false;
         }
     }
 }

@@ -22,7 +22,7 @@ public class Rifle : Weapon
     }
     public override void GetInput()
     {
-        if (KeyBoardManager.ShootPressed())
+        if (keyBoardManager.ShootPressed())
         {
             isShooting = true;
         }
