@@ -495,7 +495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92cee25e0f357a46b2caed96bdbbab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AimKey: 101
+  AimKey: 324
   CrouchKey: 113
   ReloadKey: 104
   LoveKey: 108

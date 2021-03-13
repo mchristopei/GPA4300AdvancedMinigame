@@ -5,7 +5,6 @@ using UnityEngine;
 
  public class KeyBoardManager : MonoBehaviour
  {
-
     [SerializeField] private KeyCode AimKey = KeyCode.E;
     [SerializeField] private KeyCode CrouchKey = KeyCode.Q;
     [SerializeField] private KeyCode ReloadKey = KeyCode.H;
@@ -16,6 +15,7 @@ using UnityEngine;
     [SerializeField] private KeyCode switchWeaponKey = KeyCode.X;
     [SerializeField] private KeyCode UseItemKey = KeyCode.K;
     [SerializeField] private KeyCode switchItemsKey = KeyCode.I;
+
 
     public bool RifleActive = true;
     public bool PistolActive = false;
