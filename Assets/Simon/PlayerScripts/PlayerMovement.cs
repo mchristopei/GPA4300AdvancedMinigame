@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Animator animator;
                      
-    [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float moveForce = 5f;
 
     //Inputs
