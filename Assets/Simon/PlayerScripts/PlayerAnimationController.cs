@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
+    private AudioManager audioManager;
+
     private Animator playerAnimator;
     private KeyBoardManager keyBoardManager;
     private bool aiming = false;
@@ -20,6 +22,7 @@ public class PlayerAnimationController : MonoBehaviour
     private bool heavyActive;
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         keyBoardManager = FindObjectOfType<KeyBoardManager>();
         playerAnimator = FindObjectOfType<PlayerAnimationController>().GetComponent<Animator>();
     }

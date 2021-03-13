@@ -68,6 +68,10 @@ public class Weapon : MonoBehaviour
     { 
         
     }
+    public virtual void Audio()
+    {
+
+    }
     public void OnLevelRaised(PlayerStats.StatType type, int level)
     {
         statsUpgradeManager();
