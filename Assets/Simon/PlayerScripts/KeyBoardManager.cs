@@ -15,7 +15,7 @@ using UnityEngine;
     [SerializeField] private KeyCode switchWeaponKey = KeyCode.X;
     [SerializeField] private KeyCode UseItemKey = KeyCode.K;
     [SerializeField] private KeyCode switchItemsKey = KeyCode.I;
-
+    
 
     public bool RifleActive = true;
     public bool PistolActive = false;
@@ -23,6 +23,30 @@ using UnityEngine;
     public bool SniperActive = false;
     public bool isReloading = false;
     public bool outOfAmmo = false;
+
+    public bool IsWalking()
+    {
+        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool IsRunning()
+    {
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
     public bool switchItems()
     {
         if(Input.GetKeyDown(switchItemsKey)) { return true; }

@@ -6,28 +6,34 @@ using UnityEngine;
 public class PlayerSounds : MonoBehaviour
 {
     private bool hasShot = false;
-    private bool isMeeleeing = false;
-    private bool isReloading = false;
-    private bool grenadeReady = false;
-    private bool throwingGrenade = false;
+
     [SerializeField] private AudioSource rifleShoot;
-    [SerializeField] private AudioSource rifleReload;
-    [SerializeField] private float rifleReloadTimeOffset = 0.25f;
-    private float rifleDefaultReloadTimeOffset;
     [SerializeField] private float TimeBetweenShots = 0.1f;
     private float timeSinceLastShot = 0.0f;
 
-    [SerializeField] private float meeleeTimeOffset = 0.5f;
-    private float defaultMeeleeTimeOffset;
+    [SerializeField] private AudioSource rifleReload;
+    [SerializeField] private float rifleReloadTimeOffset = 0.25f;
+    private float rifleDefaultReloadTimeOffset;
+    private bool isReloading = false;
 
-    private float timeSinceGrenadeReady = 0.0f;
-    [SerializeField] private float grenadeThrowTimeOffset = 0.5f;
-    private float grenadeThrowDefaultTimeOffset;
 
     [SerializeField] private AudioSource meelee;
+    [SerializeField] private float meeleeTimeOffset = 0.5f;
+    private float defaultMeeleeTimeOffset;
+    private bool isMeeleeing = false;
+
     [SerializeField] private AudioSource grabGrenade;
     [SerializeField] private AudioSource throwGrenade;
+    [SerializeField] private float grenadeThrowTimeOffset = 0.5f;
+    private float timeSinceGrenadeReady = 0.0f;
+    private float grenadeThrowDefaultTimeOffset;
+    private bool throwingGrenade = false;
+    private bool grenadeReady = false;
 
+    [SerializeField] private AudioSource Walk;
+    private bool isWlaking = false;
+    [SerializeField] private AudioSource Run;
+    private bool isRunning = false;
     private KeyBoardManager keyBoardManager;
     void Start()
     {
@@ -62,6 +68,30 @@ public class PlayerSounds : MonoBehaviour
     {
         Meelee();
         Grenade();
+        FootSteps();
+    }
+    void FootSteps()
+    {
+        if(keyBoardManager.IsWalking() && !isWlaking)
+        {
+            Walk.Play();
+            isWlaking = true;
+        }
+        if(!keyBoardManager.IsWalking() && isWlaking)
+        {
+            Walk.Stop();
+            isWlaking = false;
+        }
+        else if(keyBoardManager.IsWalking() && keyBoardManager.IsRunning() && !isRunning)
+        {
+            Run.Play();
+            isRunning = true;
+        }
+        else if(keyBoardManager.IsWalking() && !keyBoardManager.IsRunning() && isRunning)
+        {
+            Run.Stop();
+            isRunning = false;
+        }
     }
     void Grenade()
     {
