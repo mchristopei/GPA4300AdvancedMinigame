@@ -82,12 +82,12 @@ public class PlayerSounds : MonoBehaviour
             Walk.Stop();
             isWlaking = false;
         }
-        else if(keyBoardManager.IsWalking() && keyBoardManager.IsRunning() && !isRunning)
+        if(keyBoardManager.IsRunning() && !isRunning)
         {
             Run.Play();
             isRunning = true;
         }
-        else if(keyBoardManager.IsWalking() && !keyBoardManager.IsRunning() && isRunning)
+        if(!keyBoardManager.IsRunning() && isRunning)
         {
             Run.Stop();
             isRunning = false;
