@@ -23,32 +23,4 @@ public class AmmunitionControl : MonoBehaviour
     public float sniperAmmoInMagazine = 4.0f;
     [Range(0, 60)]
     public float sniperTotalAmmoCount = 30.0f;
-
-    private KeyBoardManager keyBoardManager;
-    void Start()
-    {
-        keyBoardManager = FindObjectOfType<KeyBoardManager>();
-        if(keyBoardManager.RifleActive)
-        {
-
-
-        }
-        else if(keyBoardManager.PistolActive)
-        {
-
-        }
-        else if(keyBoardManager.SniperActive)
-        {
-
-        }
-        else if(keyBoardManager.HeavyActive)
-        {
-
-        }
-    }
-
-    void Update()
-    {
-        
-    }
 }
