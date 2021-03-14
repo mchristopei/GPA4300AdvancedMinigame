@@ -13,7 +13,9 @@ public class Weapon : MonoBehaviour
 
     protected private KeyBoardManager keyBoardManager;
 
-    [SerializeField] protected private float RegularFov = 60.0f;
+	[SerializeField] protected private GameObject impactEffect;
+	[SerializeField] protected private ParticleSystem muzzleFlash;
+	[SerializeField] protected private float RegularFov = 60.0f;
     [SerializeField] protected private float AimFov = 140.0f;
 
     [SerializeField] protected private float regNearClippingPlane = 0.01f;
@@ -140,14 +142,15 @@ public class Weapon : MonoBehaviour
     }
     public void Shoot()
     {
-        GetInput();
+
+		GetInput();
         if (isShooting)
         {
             if(!keyBoardManager.isReloading)
             {
                 if (shotTimer == 0.0f && ammoLeftInMagazine > 0)
                 {
-                    ShootRayCast();
+					ShootRayCast();
                     ammoLeftInMagazine -= 1;
                     currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
                     currentAmmo.text = Convert.ToString(totalAmmoCount);
@@ -169,7 +172,9 @@ public class Weapon : MonoBehaviour
     }
     public void ShootRayCast()
     {
-        RaycastHit hit;
+		muzzleFlash.Play();
+
+		RaycastHit hit;
         if (Physics.Raycast(camera.transform.position + camera.transform.forward.normalized, camera.transform.forward, out hit, range))
         {
             Target target = hit.transform.GetComponent<Target>();
@@ -177,7 +182,9 @@ public class Weapon : MonoBehaviour
 
             if (target != null)
             {
-                if (target is IDamagable)
+				GameObject ImpactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+
+				if (target is IDamagable)
                 {
                     if (hit.distance > range * 0.75f)
                     {
