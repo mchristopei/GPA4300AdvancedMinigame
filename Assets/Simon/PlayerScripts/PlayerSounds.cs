@@ -45,6 +45,10 @@ public class PlayerSounds : MonoBehaviour
     private float showLoveTimeOffset = 1.5f;
     private float defaultShowLoveTimeOffset;
     private bool isShowingLove;
+
+    [SerializeField] private AudioSource ScopeIn;
+    [SerializeField] private AudioSource ScopeOut;
+    private bool scopeActive;
     void Start()
     {
         keyBoardManager = FindObjectOfType<KeyBoardManager>();

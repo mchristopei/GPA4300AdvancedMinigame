@@ -370,4 +370,117 @@ public class UpgradeMenu : MonoBehaviour
             }
         }
     }
+    public void UpgradeHealth()
+    {
+        if (!upgradingHealth)
+        {
+            upgradeHealth = true;
+        }
+
+    }
+    public void DowngradeHealth()
+    {
+        if (!downgradingHealth)
+        {
+            downgradeHealth = true;
+        }
+
+    }
+    public void UpgradeLevel()
+    {
+        if (!upgradingLevel)
+        {
+            upgradeLevel = true;
+        }
+
+    }
+    public void DowngradeLevel()
+    {
+        if (!downgradingLevel)
+        {
+            downgradeLevel = true;
+        }
+
+    }
+
+    public void UpgradeDefense()
+    {
+        if (!upgradingDefense)
+        {
+            upgradeDefense = true;
+        }
+
+    }
+    public void DowngradeDefense()
+    {
+        if (!downgradingDefense)
+        {
+            downgradeDefense = true;
+        }
+
+    }
+    public void UpgradeDamage()
+    {
+        if (!upgradingDamage)
+        {
+            upgradeDamage = true;
+        }
+
+    }
+    public void DowngradeDamage()
+    {
+        if (!downgradingDamage)
+        {
+            downgradeDamage = true;
+        }
+
+    }
+    public void UpgradeRange()
+    {
+        if (!upgradingRange)
+        {
+            upgradeRange = true;
+        }
+
+    }
+    public void DowngradeRange()
+    {
+        if (!downgradingRange)
+        {
+            downgradeRange = true;
+        }
+
+    }
+    public void UpgradeAmmoCapacity()
+    {
+        if (!upgradingAmmoCapacity)
+        {
+            upgradeAmmoCapacity = true;
+        }
+
+    }
+    public void DowngradeAmmoCapacity()
+    {
+        if (!downgradingAmmoCapacity)
+        {
+            downgradeAmmoCapacity = true;
+        }
+
+    }
+    public void UpgradeMagazineCapacity()
+    {
+        if (!upgradingMagazineCapacity)
+        {
+            upgradeMagazineCapacity = true;
+        }
+
+    }
+    public void DowngradeMagazineCapacity()
+    {
+        if (!downgradingMagazineCapacity)
+        {
+            downgradeMagazineCapacity = true;
+        }
+
+    }
 }
