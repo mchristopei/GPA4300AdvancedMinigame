@@ -7,25 +7,21 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUi;
-    
+    [SerializeField] private GameObject BackGround;
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameIsPaused)
         {
                 Pause();
         }
-        else
-        {
-            if(GameIsPaused)
-            {
-                Resume();
-            }
-        }
+
     }
 
     public void Resume()
     {
         pauseMenuUi.SetActive(false);
+        BackGround.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
     }
@@ -34,6 +30,7 @@ public class PauseMenu : MonoBehaviour
     void Pause ()
     {
         pauseMenuUi.SetActive(true);
+        BackGround.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
     }
