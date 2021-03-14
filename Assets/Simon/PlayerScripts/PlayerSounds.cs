@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class PlayerSounds : MonoBehaviour
 {
+    public bool isGrounded = true;
     private bool hasShot = false;
 
+    //RifleSpecific
     [SerializeField] private AudioSource rifleShoot;
     [SerializeField] private float TimeBetweenShots = 0.1f;
     private float timeSinceLastShot = 0.0f;
@@ -16,7 +18,10 @@ public class PlayerSounds : MonoBehaviour
     private float rifleDefaultReloadTimeOffset;
     private bool isReloading = false;
 
+    [SerializeField] private AudioSource PistolShoot;
+    private bool isTrue = false;
 
+    //General
     [SerializeField] private AudioSource meelee;
     [SerializeField] private float meeleeTimeOffset = 0.5f;
     private float defaultMeeleeTimeOffset;
@@ -35,12 +40,18 @@ public class PlayerSounds : MonoBehaviour
     [SerializeField] private AudioSource Run;
     private bool isRunning = false;
     private KeyBoardManager keyBoardManager;
+
+    [SerializeField] private AudioSource showLove;
+    private float showLoveTimeOffset = 1.5f;
+    private float defaultShowLoveTimeOffset;
+    private bool isShowingLove;
     void Start()
     {
         keyBoardManager = FindObjectOfType<KeyBoardManager>();
         defaultMeeleeTimeOffset = meeleeTimeOffset;
         rifleDefaultReloadTimeOffset = rifleReloadTimeOffset;
         grenadeThrowDefaultTimeOffset = grenadeThrowTimeOffset;
+        defaultShowLoveTimeOffset = showLoveTimeOffset;
     }
 
     void Update()
@@ -49,6 +60,19 @@ public class PlayerSounds : MonoBehaviour
         if(keyBoardManager.RifleActive)
         {
             RifleSounds();
+        }
+        else if(keyBoardManager.PistolActive)
+        {
+            PistolSounds();
+        }
+        else if(keyBoardManager.SniperActive)
+        {
+            SniperSounds();
+            
+        }
+        else if(keyBoardManager.HeavyActive)
+        {
+            HeavySounds();
         }
     }
     void PlayWithOffset(float timeOffset, float defaultTimeOffset, bool condition, AudioSource audioSource)
@@ -64,34 +88,71 @@ public class PlayerSounds : MonoBehaviour
             }
         }
     }
+    void ShowLove()
+    {
+        if(keyBoardManager.ShowLovePressed() && !isShowingLove)
+        {
+            isShowingLove = true;
+        }
+        if(isShowingLove)
+        {
+            showLoveTimeOffset -= Time.deltaTime;
+            if(showLoveTimeOffset <= 0.0f)
+            {
+                showLove.Play();
+                isShowingLove = false;
+                showLoveTimeOffset = defaultShowLoveTimeOffset;
+            }
+        }
+    }
     private void GeneralSounds()
     {
         Meelee();
         Grenade();
         FootSteps();
+        ShowLove();
     }
     void FootSteps()
     {
-        if(keyBoardManager.IsWalking() && !isWlaking)
+        if (isGrounded)
         {
-            Walk.Play();
-            isWlaking = true;
+            if (keyBoardManager.IsWalking() && !isWlaking)
+            {
+                Walk.Play();
+                isWlaking = true;
+            }
+            if ((!keyBoardManager.IsWalking() && isWlaking))
+            {
+                Walk.Stop();
+                isWlaking = false;
+            }
+            if (keyBoardManager.IsRunning() && !isRunning)
+            {
+                Run.Play();
+                isRunning = true;
+            }
+            if ((!keyBoardManager.IsRunning() && isRunning))
+            {
+                Run.Stop();
+                isRunning = false;
+            }
+
+
         }
-        if(!keyBoardManager.IsWalking() && isWlaking)
+        else if(!isGrounded)
         {
-            Walk.Stop();
-            isWlaking = false;
+            if(isWlaking)
+            {
+                Walk.Stop();
+                isWlaking = false;
+            }
+            if(isRunning)
+            {
+                Run.Stop();
+                isRunning = false;
+            }
         }
-        if(keyBoardManager.IsRunning() && !isRunning)
-        {
-            Run.Play();
-            isRunning = true;
-        }
-        if(!keyBoardManager.IsRunning() && isRunning)
-        {
-            Run.Stop();
-            isRunning = false;
-        }
+        
     }
     void Grenade()
     {
@@ -180,14 +241,52 @@ public class PlayerSounds : MonoBehaviour
     }
     private void PistolSounds()
     {
-
+        if(keyBoardManager.SingleShootPressed())
+        {
+            PistolShoot.Play();
+            hasShot = true;
+        }
+        else
+        {
+            if(hasShot == true)
+            {
+                PistolShoot.Stop();
+            }
+        }
     }
     private void SniperSounds()
     {
-
+        if (keyBoardManager.SingleShootPressed())
+        {
+            PistolShoot.Play();
+            hasShot = true;
+        }
+        else
+        {
+            if (hasShot == true)
+            {
+                PistolShoot.Stop();
+                hasShot = false;
+            }
+        }
     }
     private void HeavySounds()
     {
 
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("Ground"))
+        {
+            isGrounded = false;
+
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 }

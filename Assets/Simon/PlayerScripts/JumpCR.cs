@@ -16,7 +16,8 @@ public class JumpCR : MonoBehaviour
     private bool jumpPressed;
     private KeyCode jumpKey = KeyCode.Space;
 
-
+    [SerializeField] private AudioSource jump;
+    [SerializeField] private AudioSource land;
     private void Start()
     {
         x = jumpStrength;
@@ -61,6 +62,7 @@ public class JumpCR : MonoBehaviour
         {
             isGrounded = true;
             animator.SetBool("Jumping", false);
+            land.Play();
         }
     }
     private void OnTriggerExit(Collider other)
@@ -68,6 +70,7 @@ public class JumpCR : MonoBehaviour
         if (other.tag.Equals("Ground"))
         {
             isGrounded = false;
+            jump.Play();
         }
     }
 }
