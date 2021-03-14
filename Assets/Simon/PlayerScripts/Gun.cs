@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponNumber : MonoBehaviour
+
+public class Gun : MonoBehaviour
 {
     [SerializeField] new private Camera camera;
+    [SerializeField] private Camera aimCam;
 
     [SerializeField] private float ammoLeftInMagazine = 0;
     [SerializeField] private float totalAmmoCount;
@@ -21,11 +24,15 @@ public class WeaponNumber : MonoBehaviour
 
     private bool isShooting = false;
     private float timer = 0.0f;
-     
+    private float shotTimer = 0.0f;
+
     private PlayerStats playerStats;
+    private bool isAiming;
+    private float aimTimer;
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
+        playerStats.LevelModified += OnLevelRaised;
 
         switch (gameObject.name)
         {
@@ -67,49 +74,109 @@ public class WeaponNumber : MonoBehaviour
         initDamageAmaount = damage;
         initRangeAmount = range;
         initMagazineCapacity = magazineCapacity;
-    statsUpgradeManager();
+        statsUpgradeManager();
     }
+    private void OnLevelRaised(PlayerStats.StatType type, int level)
+    {
+        statsUpgradeManager();
+    }
+
     private void Update()
     {
-        Shoot();
-        /*
-        if(playerStats.ApplyUpdates == true)
+        if(gameObject.name == "Rifle")
         {
-            statsUpgradeManager();
-            playerStats.ApplyUpdates = false;
+            RifleShoot();
         }
-        */
+        if (gameObject.name == "Pistol")
+        {
+            PistolShoot();
+        }
+        Aim();
+    }
+    private void Aim()
+    {
+        if (KeyBoardManager.AimPressed())
+        {
+            isAiming = true;
+            aimTimer += Time.deltaTime;
+
+            if(aimTimer >= 0.25f)
+            {
+                camera.gameObject.SetActive(false);
+                aimCam.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            camera.gameObject.SetActive(true);
+            aimCam.gameObject.SetActive(false);
+            isAiming = false;
+            aimTimer = 0.0f;
+        }
     }
     private void statsUpgradeManager()
     {
-        damage = initDamageAmaount *(playerStats.GunDamageUpgradeAmount);
+        damage = initDamageAmaount * (playerStats.GunDamageUpgradeAmount);
         range = initRangeAmount * playerStats.GunRangeUpgradeAmount;
-        maxAmmoAmount += initMaxAmmoCount * playerStats.ammoCapacityUpgradeAmount;
-        magazineCapacity += initMagazineCapacity * playerStats.MagazineCapacityUpgradeAmount;
+        maxAmmoAmount = initMaxAmmoCount * playerStats.ammoCapacityUpgradeAmount;
+        magazineCapacity = initMagazineCapacity * playerStats.MagazineCapacityUpgradeAmount;
 
         totalAmmoCount = maxAmmoAmount;
         ammoLeftInMagazine = magazineCapacity;
     }
-    private void Shoot()
+    private void PistolShoot()
     {
-       // if (KeyBoardManager.ShootPressed() && !isShooting)
-       // {
-       //     isShooting = true;
-       // }
-
-        if (isShooting && ammoLeftInMagazine >= 1)
+        if(shotTimer >= timeBetweenShots)
         {
-            timer += Time.deltaTime;
-        }
-
-        if (timer > timeBetweenShots)
-        {
-            ammoLeftInMagazine -= 1;
-            timer = 0.0f;
             isShooting = false;
         }
+        if (KeyBoardManager.SingleShootPressed())
+        {
+            isShooting = true;
+        }
+        if(isShooting)
+        {
+            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+            {
+                ShootRayCast();
+                ammoLeftInMagazine -= 1;
+            }
+
+            shotTimer += Time.deltaTime;
+
+        }
+        if(!isShooting)
+        {
+            shotTimer = 0.0f;
+        }
         SetTotalAmmoCountAndReloadAmount();
-        ShootRayCast();
+    }
+    private void RifleShoot()
+    {
+        if (KeyBoardManager.ShootPressed())
+        {
+            isShooting = true;
+        }
+        if (isShooting)
+        {
+            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+            {
+                ShootRayCast();
+                ammoLeftInMagazine -= 1;
+            }
+
+            shotTimer += Time.deltaTime;
+
+            if (shotTimer >= timeBetweenShots)
+            {
+                isShooting = false;
+            }
+        }
+        if (!isShooting)
+        {
+            shotTimer = 0.0f;
+        }
+        SetTotalAmmoCountAndReloadAmount();
     }
     void ShootRayCast()
     {
@@ -124,7 +191,7 @@ public class WeaponNumber : MonoBehaviour
                 if (target is IDamagable)
                 {
                     if (hit.distance > range * 0.75f)
-                    { 
+                    {
 
                         target.health -= (damage * 0.25f);
                     }
@@ -132,7 +199,7 @@ public class WeaponNumber : MonoBehaviour
                     {
                         target.health -= (damage * 0.5f);
                     }
-                    else if(hit.distance > 0.1f && hit.distance < range * 0.25f)
+                    else if (hit.distance > 0.1f && hit.distance < range * 0.25f)
                     {
                         target.health -= (damage);
                     }
@@ -156,18 +223,19 @@ public class WeaponNumber : MonoBehaviour
     }
     public void SetTotalAmmoCountAndReloadAmount()
     {
-        //if (KeyBoardManager.ReloadPressed())
-        //{
-        //    if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
-        //    {
-        //        totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
-        //        ammoLeftInMagazine += (magazineCapacity - ammoLeftInMagazine);
-        //    }
-        //    else if (totalAmmoCount < magazineCapacity && totalAmmoCount < (magazineCapacity - ammoLeftInMagazine))
-        //    {
-        //        ammoLeftInMagazine += totalAmmoCount;
-        //        totalAmmoCount = 0;
-        //    }                
-        //}
+        if (KeyBoardManager.ReloadPressed())
+        {
+            if (totalAmmoCount > magazineCapacity && ammoLeftInMagazine < magazineCapacity && totalAmmoCount >= (magazineCapacity - ammoLeftInMagazine))
+            {
+                totalAmmoCount -= (magazineCapacity - ammoLeftInMagazine);
+                ammoLeftInMagazine += (magazineCapacity - ammoLeftInMagazine);
+            }
+            else if (totalAmmoCount < magazineCapacity && totalAmmoCount < (magazineCapacity - ammoLeftInMagazine))
+            {
+                ammoLeftInMagazine += totalAmmoCount;
+                totalAmmoCount = 0;
+            }
+        }
     }
 }
+

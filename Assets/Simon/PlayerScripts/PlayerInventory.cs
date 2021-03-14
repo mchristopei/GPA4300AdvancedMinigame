@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class PlayerInventory 
 {
-    public static List<GameObject> WeaponsInInventoryList = new List<GameObject>();
+	public static List<GameObject> WeaponsInInventoryList = new List<GameObject>();
 }

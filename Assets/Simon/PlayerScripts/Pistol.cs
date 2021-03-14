@@ -8,7 +8,7 @@ public class Pistol : Weapon
     {
         damage = 20f;
         range = 50f;
-        maxAmmoAmount = 50f;
+        totalAmmoCount = 50f;
         magazineCapacity = 10f;
         timeBetweenShots = 1f;
 

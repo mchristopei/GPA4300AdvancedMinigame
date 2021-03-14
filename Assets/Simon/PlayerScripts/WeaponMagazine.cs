@@ -14,35 +14,35 @@ public class WeaponMagazine: MonoBehaviour
         keyBoardManager.SniperActive = false;
         keyBoardManager.RifleActive = true;
 
-        PlayerInventory.WeaponsInInventoryList[0].SetActive(true);
-        PlayerInventory.WeaponsInInventoryList[1].SetActive(false);
-        PlayerInventory.WeaponsInInventoryList[2].SetActive(false);
-        PlayerInventory.WeaponsInInventoryList[3].SetActive(false);
+		InventoryController.WeaponsInInventory[0].SetActive(true);
+		InventoryController.WeaponsInInventory[1].SetActive(false);
+		InventoryController.WeaponsInInventory[2].SetActive(false);
+		InventoryController.WeaponsInInventory[3].SetActive(false);
     }
     
     private void Update()
     {
         if(keyBoardManager.SwitchWeaponPressed())
         {
-            Debug.Log(PlayerInventory.WeaponsInInventoryList.Count);
-                PlayerInventory.WeaponsInInventoryList[weaponCounter].SetActive(false);
+            Debug.Log(InventoryController.WeaponsInInventory.Count);
+			InventoryController.WeaponsInInventory[weaponCounter].SetActive(false);
                 weaponCounter += 1;
-                if (weaponCounter >= PlayerInventory.WeaponsInInventoryList.Count)
+                if (weaponCounter >= InventoryController.WeaponsInInventory.Count)
                 {
                     weaponCounter = 0;
                 }
                 Debug.Log(weaponCounter);
-            //else if(PlayerInventory.WeaponsInInventoryList.Count <= 0)
-            //{
-            //    weaponCounter = -1;
-            //}
-            PlayerInventory.WeaponsInInventoryList[weaponCounter].SetActive(true);
+			//else if(PlayerInventory.WeaponsInInventoryList.Count <= 0)
+			//{
+			//    weaponCounter = -1;
+			//}
+			InventoryController.WeaponsInInventory[weaponCounter].SetActive(true);
             SetWeapon();
         }
     }
     void SetWeapon()
     {
-        switch (PlayerInventory.WeaponsInInventoryList[weaponCounter].name)
+        switch (InventoryController.WeaponsInInventory[weaponCounter].name)
         {
             case "Pistol":
                 keyBoardManager.RifleActive = false;

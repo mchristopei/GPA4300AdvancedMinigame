@@ -24,7 +24,26 @@ using UnityEngine;
     public bool isReloading = false;
     public bool outOfAmmo = false;
 
+<<<<<<< HEAD
     public bool IsWalking()
+=======
+    public static bool RifleActive;
+    public static bool PistolActive;
+    public static bool HeavyActive;
+    public static bool SniperActive;
+
+	public static void SwitchActiveBools(bool boolToActivate)
+	{
+		RifleActive = false;
+		PistolActive = false;
+		HeavyActive = false;
+		SniperActive = false;
+
+		boolToActivate = true;
+	}
+
+	public static bool switchItems()
+>>>>>>> 20196126e59c1ef6b16749f6d3b9a0b92957568f
     {
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
@@ -102,4 +121,4 @@ using UnityEngine;
         if (Input.GetKeyDown(switchWeaponKey)) { return true; }
         else { return false; }
     }
- }
+}

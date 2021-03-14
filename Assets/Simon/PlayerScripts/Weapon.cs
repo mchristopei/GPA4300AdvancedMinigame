@@ -38,6 +38,7 @@ public class Weapon : MonoBehaviour
     protected private PlayerStats playerStats;
     protected private bool isAiming;
     protected private float aimTimer;
+	protected private bool isInInventory;
 
     protected private float ReloadTimer = 0.0f;
 
@@ -51,10 +52,15 @@ public class Weapon : MonoBehaviour
     }
     public void Start()
     {
+<<<<<<< HEAD
         keyBoardManager = FindObjectOfType<KeyBoardManager>();
         keyBoardManager.isReloading = false;
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
         playerStats = FindObjectOfType<PlayerStats>();
+=======
+		CheckIfInInventory();
+		playerStats = FindObjectOfType<PlayerStats>();
+>>>>>>> 20196126e59c1ef6b16749f6d3b9a0b92957568f
         playerStats.LevelModified += OnLevelRaised;
         ConfigInitValues();
 
@@ -64,6 +70,19 @@ public class Weapon : MonoBehaviour
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
     }
+
+	void CheckIfInInventory()
+	{
+		if(transform.parent != null)
+		{
+			if (transform.parent.name == "T-Pose")
+			{
+				isInInventory = true;
+			}
+		}
+
+	}
+
     public virtual void ConfigInitValues()
     { 
         
@@ -79,6 +98,7 @@ public class Weapon : MonoBehaviour
 
     public void Update()
     {
+<<<<<<< HEAD
         if(ammoLeftInMagazine == 0)
         {
             keyBoardManager.outOfAmmo = true;
@@ -89,6 +109,14 @@ public class Weapon : MonoBehaviour
         }
             Aim();
             Shoot();
+=======
+		CheckIfInInventory();
+		if (isInInventory)
+		{
+			Aim();
+			Shoot();
+		}
+>>>>>>> 20196126e59c1ef6b16749f6d3b9a0b92957568f
     }
     public void Aim()
     {
@@ -135,7 +163,17 @@ public class Weapon : MonoBehaviour
         GetInput();
         if (isShooting)
         {
+<<<<<<< HEAD
             if(!keyBoardManager.isReloading)
+=======
+			if (ammoLeftInMagazine <= 0 && totalAmmoCount > 0)
+			{
+				totalAmmoCount--;
+				ammoLeftInMagazine = magazineCapacity;
+			}
+
+            if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
+>>>>>>> 20196126e59c1ef6b16749f6d3b9a0b92957568f
             {
                 if (shotTimer == 0.0f && ammoLeftInMagazine > 0)
                 {

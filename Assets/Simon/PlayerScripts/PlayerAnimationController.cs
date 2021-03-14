@@ -52,6 +52,7 @@ public class PlayerAnimationController : MonoBehaviour
             }
         }
         
+<<<<<<< HEAD
         if ((keyBoardManager.PistolActive || keyBoardManager.SniperActive || keyBoardManager.HeavyActive) && !keyBoardManager.outOfAmmo)
         {
             if (keyBoardManager.outOfAmmo)
@@ -77,5 +78,19 @@ public class PlayerAnimationController : MonoBehaviour
             action = false;
             playerAnimator.SetBool(parameter, false);
         }
+=======
+       if(KeyBoardManager.RifleActive)
+       {
+           playerAnimator.SetBool("Shoot", KeyBoardManager.ShootPressed());
+       }
+       if(KeyBoardManager.PistolActive || KeyBoardManager.SniperActive || KeyBoardManager.HeavyActive)
+       {
+           playerAnimator.SetBool("Shoot", KeyBoardManager.SingleShootPressed());
+       }
+       playerAnimator.SetBool("RifleActive", KeyBoardManager.RifleActive);
+       playerAnimator.SetBool("PistolActive", KeyBoardManager.PistolActive);
+       playerAnimator.SetBool("HeavyActive", KeyBoardManager.HeavyActive);
+       playerAnimator.SetBool("SniperActive", KeyBoardManager.SniperActive);
+>>>>>>> 20196126e59c1ef6b16749f6d3b9a0b92957568f
     }
 }
