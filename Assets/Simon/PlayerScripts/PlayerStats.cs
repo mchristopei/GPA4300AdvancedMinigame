@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -28,6 +29,14 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] public float ammoCapacityUpgradeAmount;
     [SerializeField] public float MagazineCapacityUpgradeAmount;
 
+    [SerializeField] private Text healthText;
+    [SerializeField] private Text levelText;
+    [SerializeField] private Text defenseText;
+    [SerializeField] private Text damageText;
+    [SerializeField] private Text rangeText;
+    [SerializeField] private Text ammoCapText;
+    [SerializeField] private Text magCapText;
+
     [SerializeField] public float maxLevel = 10.0f;
 
     Dictionary<StatType, int> playerLevels;
@@ -38,6 +47,23 @@ public class PlayerStats : MonoBehaviour
     {
         playerLevels = new Dictionary<StatType, int>();
         ResetStats();
+    }
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            SceneManager.LoadScene("GameOverScene");
+            Cursor.lockState = CursorLockMode.None;
+            Destroy(gameObject);
+
+        }
+        healthBar.value = health;
+
+    }
+    public void SetMaxHealth()
+    {
+        healthBar.maxValue = health;
     }
     private void ResetStats()
     {
@@ -75,7 +101,7 @@ public class PlayerStats : MonoBehaviour
         {
             playerLevels.Add(type, 1);
         }
-
+        UpgradeUi();
         ResetStats();
 
         if (LevelModified != null)
@@ -94,11 +120,21 @@ public class PlayerStats : MonoBehaviour
         {
             playerLevels.Add(type, 1);
         }
-
+        UpgradeUi();
         ResetStats();
 
         if (LevelModified != null)
             LevelModified.Invoke(type, playerLevels[type]);
+    }
+    private void UpgradeUi()
+    {
+        healthText.text = Convert.ToString(GetLevelFor(StatType.Health));
+        levelText.text = Convert.ToString(GetLevelFor(StatType.Level));
+        defenseText.text = Convert.ToString(GetLevelFor(StatType.Defense));
+        damageText.text = Convert.ToString(GetLevelFor(StatType.GunDamage));
+        rangeText.text = Convert.ToString(GetLevelFor(StatType.GunRange));
+        ammoCapText.text = Convert.ToString(GetLevelFor(StatType.AmmoCapacity));
+        magCapText.text = Convert.ToString(GetLevelFor(StatType.MagazineCapacity));
     }
 
 }

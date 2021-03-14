@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
+    protected private AmmunitionControl ammunitionControl;
 
     new public Camera camera;
     public GameObject Crosshair;
@@ -51,6 +52,7 @@ public class Weapon : MonoBehaviour
     }
     public void Start()
     {
+        ammunitionControl = FindObjectOfType<AmmunitionControl>();
         keyBoardManager = FindObjectOfType<KeyBoardManager>();
         keyBoardManager.isReloading = false;
         PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
@@ -63,7 +65,15 @@ public class Weapon : MonoBehaviour
         initRangeAmount = range;
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
+        SetAmmoOnStart();
+        currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
+        currentAmmo.text = Convert.ToString(totalAmmoCount);
     }
+    public virtual void SetAmmoOnStart()
+    {
+       
+    }
+
     public virtual void ConfigInitValues()
     { 
         
@@ -79,7 +89,9 @@ public class Weapon : MonoBehaviour
 
     public void Update()
     {
-        if(ammoLeftInMagazine == 0)
+        setAmmoControlStats();
+
+        if (ammoLeftInMagazine == 0)
         {
             keyBoardManager.outOfAmmo = true;
         }
@@ -119,11 +131,7 @@ public class Weapon : MonoBehaviour
         range = initRangeAmount * playerStats.GunRangeUpgradeAmount;
         maxAmmoAmount = initMaxAmmoCount * playerStats.ammoCapacityUpgradeAmount;
         magazineCapacity = initMagazineCapacity * playerStats.MagazineCapacityUpgradeAmount;
-
-        totalAmmoCount = maxAmmoAmount;
-        ammoLeftInMagazine = magazineCapacity;
-        currentMagazineAmmo.text = Convert.ToString(ammoLeftInMagazine);
-        currentAmmo.text = Convert.ToString(totalAmmoCount);
+       
     }
 
     public virtual void GetInput()
@@ -229,5 +237,10 @@ public class Weapon : MonoBehaviour
                 ReloadTimer = 0.0f;
             }
         }
+
+    }
+    public virtual void setAmmoControlStats()
+    {
+
     }
 }

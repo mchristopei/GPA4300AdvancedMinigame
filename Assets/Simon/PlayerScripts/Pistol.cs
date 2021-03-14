@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Pistol : Weapon
 {
+    public override void SetAmmoOnStart()
+    {
+        totalAmmoCount = ammunitionControl.pistolTotalAmmoCount;
+        ammoLeftInMagazine = ammunitionControl.pistolAmmoInMagazine;
+    }
     public override void ConfigInitValues()
     {
         damage = 20f;
@@ -24,5 +29,10 @@ public class Pistol : Weapon
         {
             isShooting = true;
         }
+    }
+    public override void setAmmoControlStats()
+    {
+        ammunitionControl.pistolAmmoInMagazine = ammoLeftInMagazine;
+        ammunitionControl.pistolTotalAmmoCount = totalAmmoCount;
     }
 }

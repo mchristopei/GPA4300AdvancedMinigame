@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Sniper : Weapon
 {
+    public override void SetAmmoOnStart()
+    {
+        totalAmmoCount = ammunitionControl.sniperTotalAmmoCount;
+        ammoLeftInMagazine = ammunitionControl.sniperAmmoInMagazine;
+    }
     public override void ConfigInitValues()
     {
         damage = 30f;
         range = 250f;
         maxAmmoAmount = 60f;
-        magazineCapacity = 80f;
+        magazineCapacity = 8f;
         timeBetweenShots = 2f;
 
         RegularFov = 140;
@@ -24,5 +29,10 @@ public class Sniper : Weapon
         {
             isShooting = true;
         }
+    }
+    public override void setAmmoControlStats()
+    {
+        ammunitionControl.sniperAmmoInMagazine = ammoLeftInMagazine;
+        ammunitionControl.sniperTotalAmmoCount = totalAmmoCount;
     }
 }
