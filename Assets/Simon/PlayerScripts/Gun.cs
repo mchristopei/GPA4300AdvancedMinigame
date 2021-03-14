@@ -68,7 +68,7 @@ public class Gun : MonoBehaviour
                 Destroy(gameObject);
                 break;
         }
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
+		InventoryController.WeaponsInInventory.Add(this.gameObject);
 
         initMaxAmmoCount = maxAmmoAmount;
         initDamageAmaount = damage;

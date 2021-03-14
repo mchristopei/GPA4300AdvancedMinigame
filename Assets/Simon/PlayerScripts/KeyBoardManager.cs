@@ -21,7 +21,18 @@ using UnityEngine;
     public static bool PistolActive;
     public static bool HeavyActive;
     public static bool SniperActive;
-    public static bool switchItems()
+
+	public static void SwitchActiveBools(bool boolToActivate)
+	{
+		RifleActive = false;
+		PistolActive = false;
+		HeavyActive = false;
+		SniperActive = false;
+
+		boolToActivate = true;
+	}
+
+	public static bool switchItems()
     {
         if(Input.GetKey(switchItemsKey)) { return true; }
         else { return false; }
@@ -76,4 +87,4 @@ using UnityEngine;
         if (Input.GetKeyDown(switchWeaponKey)) { return true; }
         else { return false; }
     }
- }
+}

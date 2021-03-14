@@ -36,6 +36,7 @@ public class Weapon : MonoBehaviour
     protected private PlayerStats playerStats;
     protected private bool isAiming;
     protected private float aimTimer;
+	protected private bool isInInventory;
 
     //UI
     public Text currentMagazineAmmo;
@@ -46,9 +47,8 @@ public class Weapon : MonoBehaviour
     }
     public void Start()
     {
-
-        PlayerInventory.WeaponsInInventoryList.Add(this.gameObject);
-        playerStats = FindObjectOfType<PlayerStats>();
+		CheckIfInInventory();
+		playerStats = FindObjectOfType<PlayerStats>();
         playerStats.LevelModified += OnLevelRaised;
         ConfigInitValues();
 
@@ -58,6 +58,19 @@ public class Weapon : MonoBehaviour
         initMagazineCapacity = magazineCapacity;
         statsUpgradeManager();
     }
+
+	void CheckIfInInventory()
+	{
+		if(transform.parent != null)
+		{
+			if (transform.parent.name == "T-Pose")
+			{
+				isInInventory = true;
+			}
+		}
+
+	}
+
     public virtual void ConfigInitValues()
     { 
         
@@ -69,9 +82,12 @@ public class Weapon : MonoBehaviour
 
     public void Update()
     {
-        
-        Aim();
-        Shoot();
+		CheckIfInInventory();
+		if (isInInventory)
+		{
+			Aim();
+			Shoot();
+		}
     }
     public void Aim()
     {
@@ -118,6 +134,12 @@ public class Weapon : MonoBehaviour
         GetInput();
         if (isShooting)
         {
+			if (ammoLeftInMagazine <= 0 && totalAmmoCount > 0)
+			{
+				totalAmmoCount--;
+				ammoLeftInMagazine = magazineCapacity;
+			}
+
             if (shotTimer == 0.0f && ammoLeftInMagazine > 1)
             {
                 ShootRayCast();
