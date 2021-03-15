@@ -18,10 +18,8 @@ public class PlayerSounds : MonoBehaviour
     private float rifleDefaultReloadTimeOffset;
     private bool isReloading = false;
 
-    [SerializeField] private AudioSource PistolShoot;
-    private bool isTrue = false;
 
-    //General
+
     [SerializeField] private AudioSource meelee;
     [SerializeField] private float meeleeTimeOffset = 0.5f;
     private float defaultMeeleeTimeOffset;
@@ -48,12 +46,14 @@ public class PlayerSounds : MonoBehaviour
 
     [SerializeField] private AudioSource ScopeIn;
     [SerializeField] private AudioSource ScopeOut;
-    private bool scopeActive;
+    private bool scopeActive = false;
     void Start()
     {
         keyBoardManager = FindObjectOfType<KeyBoardManager>();
         defaultMeeleeTimeOffset = meeleeTimeOffset;
         rifleDefaultReloadTimeOffset = rifleReloadTimeOffset;
+
+
         grenadeThrowDefaultTimeOffset = grenadeThrowTimeOffset;
         defaultShowLoveTimeOffset = showLoveTimeOffset;
     }
@@ -61,22 +61,19 @@ public class PlayerSounds : MonoBehaviour
     void Update()
     {
         GeneralSounds();
-        if(keyBoardManager.RifleActive)
+        RifleSounds();
+    }
+    void ScopeSounds()
+    {
+        if(keyBoardManager.AimPressed() && !scopeActive)
         {
-            RifleSounds();
+            scopeActive = true;
+            ScopeIn.Play();
         }
-        else if(keyBoardManager.PistolActive)
+        if(!keyBoardManager.AimPressed() && scopeActive)
         {
-            PistolSounds();
-        }
-        else if(keyBoardManager.SniperActive)
-        {
-            SniperSounds();
-            
-        }
-        else if(keyBoardManager.HeavyActive)
-        {
-            HeavySounds();
+            ScopeIn.Stop();
+            ScopeOut.Play();
         }
     }
     void PlayWithOffset(float timeOffset, float defaultTimeOffset, bool condition, AudioSource audioSource)
@@ -115,6 +112,7 @@ public class PlayerSounds : MonoBehaviour
         Grenade();
         FootSteps();
         ShowLove();
+        ScopeSounds();
     }
     void FootSteps()
     {
@@ -243,41 +241,8 @@ public class PlayerSounds : MonoBehaviour
             }
         }
     }
-    private void PistolSounds()
-    {
-        if(keyBoardManager.SingleShootPressed())
-        {
-            PistolShoot.Play();
-            hasShot = true;
-        }
-        else
-        {
-            if(hasShot == true)
-            {
-                PistolShoot.Stop();
-            }
-        }
-    }
-    private void SniperSounds()
-    {
-        if (keyBoardManager.SingleShootPressed())
-        {
-            PistolShoot.Play();
-            hasShot = true;
-        }
-        else
-        {
-            if (hasShot == true)
-            {
-                PistolShoot.Stop();
-                hasShot = false;
-            }
-        }
-    }
-    private void HeavySounds()
-    {
 
-    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.Equals("Ground"))
